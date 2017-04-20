@@ -1,5 +1,6 @@
 ﻿  Character.cpp
-c:\users\lord of cats\desktop\skripting changes\sfmlscripting\sfmlscripting\character.cpp(32): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\lord of cats\desktop\skripting changes\sfmlscripting\sfmlscripting\character.cpp(37): warning C4305: '+=': truncation from 'double' to 'float'
-  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Skripting changes\sfmlScripting\Debug\sfmlScripting.exe
-  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Skripting changes\sfmlScripting\Debug\sfmlScripting.pdb (Full PDB)
+c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(35): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(40): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(53): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Github\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe
+  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Github\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.pdb (Full PDB)

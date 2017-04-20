@@ -5,7 +5,9 @@ Character::Character()
 	this->character = sf::CircleShape(50.f);
 	this->character.setFillColor(sf::Color::Green);
 	this->character.setPosition(0, 500);
-	this->goingUp = false;
+
+	//jumping
+	this->jumpPower = 400;
 }
 
 Character::~Character()
@@ -13,8 +15,9 @@ Character::~Character()
 
 }
 
-void Character::update()
+void Character::update(float deltaTime)
 {
+	this->deltaTime = deltaTime;
 	move();
 }
 
@@ -24,7 +27,7 @@ void Character::move()
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		this->goingUp = true;
+		jump();
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -37,14 +40,18 @@ void Character::move()
 		velocity.x += 0.1;
 	}
 	
-	if (this->goingUp)
-	{
-		//grejer
-	}
 
 
 	//Sätter karaktärens nya position
-	this->character.setPosition(this->character.getPosition().x + velocity.x, this->character.getPosition().y + velocity.y);
+	velocity * deltaTime;
+	this->character.move(this->velocity.x, 0);
+}
+
+void Character::jump()
+{
+	//s2 = s1 + v1 * t + (a*t^2) / 2
+	float moved = (40 * this->deltaTime) + ((-9.82 * pow(this->deltaTime, 2)) / 2);
+	this->character.move(0, moved);
 }
 
 sf::CircleShape Character::getCharacter()
