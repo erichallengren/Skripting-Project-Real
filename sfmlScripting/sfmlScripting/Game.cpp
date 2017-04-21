@@ -10,9 +10,9 @@ Game::~Game()
 
 }
 
-void Game::update()
+void Game::update(float sec)
 {
-	this->character->update();
+	this->character->update(sec);
 }
 
 void Game::draw(sf::RenderWindow* window)

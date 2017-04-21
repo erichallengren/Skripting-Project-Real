@@ -12,7 +12,7 @@ public:
 	Game();
 	~Game();
 
-	void update();
+	void update(float sec);
 	void draw(sf::RenderWindow* window);
 };
 

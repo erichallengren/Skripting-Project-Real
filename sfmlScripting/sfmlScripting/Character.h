@@ -13,8 +13,8 @@ public:
 	Character();
 	~Character();
 
-	void update();
-	void move();
+	void update(float sec);
+	void move(float sec);
 
 	sf::CircleShape getCharacter();
 };

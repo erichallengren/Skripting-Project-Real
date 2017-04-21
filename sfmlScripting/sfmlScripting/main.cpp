@@ -7,6 +7,8 @@ int main()
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 
+	sf::Clock clock;
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -16,8 +18,9 @@ int main()
 				window.close();
 		}
 
-
-		game->update();
+		sf::Time elapsed = clock.restart();
+		float sec = elapsed.asSeconds();
+		game->update(sec);
 		game->draw(&window);
 	}
 	return 0;
