@@ -1,6 +1,10 @@
-﻿  Character.cpp
-c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(35): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(40): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\lord of cats\desktop\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(53): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Github\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe
-  sfmlScripting.vcxproj -> C:\Users\Lord of Cats\Desktop\Github\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.pdb (Full PDB)
+﻿  main.cpp
+c:\users\walter_2\documents\github\skripting-project-real\sfmlscripting\sfmlscripting\game.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Game.cpp
+c:\users\walter_2\documents\github\skripting-project-real\sfmlscripting\sfmlscripting\game.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Character.cpp
+c:\users\walter_2\documents\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(35): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\walter_2\documents\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(40): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\walter_2\documents\github\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(53): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+LINK : fatal error LNK1104: cannot open file 'LuaLib-x86-d.lib'

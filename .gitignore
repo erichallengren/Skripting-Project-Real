@@ -21,7 +21,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -30,3 +29,4 @@
 
 # Others
 *.db
+*.opendb
