@@ -12,7 +12,7 @@ public:
 	Game();
 	~Game();
 
-	void update(float deltaTime);
+	void update();
 	void draw(sf::RenderWindow* window);
 };
 

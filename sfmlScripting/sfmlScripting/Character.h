@@ -5,23 +5,16 @@
 class Character
 {
 private:
-	//time
-	float deltaTime;
-
 	sf::CircleShape character;
 	sf::Vector2f velocity;
 
-	//jumping
-	float jumpPower;
-	float gravity;
-	float mass;
+	bool goingUp;
 public:
 	Character();
 	~Character();
 
-	void update(float deltaTime);
+	void update();
 	void move();
-	void jump();
 
 	sf::CircleShape getCharacter();
 };

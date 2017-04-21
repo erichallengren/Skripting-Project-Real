@@ -10,9 +10,9 @@ Game::~Game()
 
 }
 
-void Game::update(float deltaTime)
+void Game::update()
 {
-	this->character->update(deltaTime);
+	this->character->update();
 }
 
 void Game::draw(sf::RenderWindow* window)

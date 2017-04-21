@@ -3,15 +3,12 @@
 
 int main()
 {
-	sf::Clock time;
-	float deltaTime;
 	Game* game = new Game();
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 
 	while (window.isOpen())
 	{
-		deltaTime = time.restart().asSeconds();
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -20,7 +17,7 @@ int main()
 		}
 
 
-		game->update(deltaTime);
+		game->update();
 		game->draw(&window);
 	}
 	return 0;
