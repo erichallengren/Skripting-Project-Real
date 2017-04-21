@@ -30,3 +30,12 @@
 
 # Others
 *.db
+*.opendb
+*.db
+*.exe
+*.ilk
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.idb
