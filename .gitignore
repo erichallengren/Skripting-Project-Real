@@ -41,3 +41,7 @@
 *.idb
 *.db
 sfmlScripting/sfmlScripting.VC.db
+*.db
+*.tlog
+*.log
+*.suo
