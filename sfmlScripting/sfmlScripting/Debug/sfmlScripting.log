@@ -1,2 +1,8 @@
-﻿  Character.cpp
-  sfmlScripting.vcxproj -> C:\Users\Walter_2\Documents\GitHub\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe
+﻿  main.cpp
+\\storage10.student.bth.se\profile\erhf15\desktop\git\skripting-project-real\sfmlscripting\sfmlscripting\game.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Game.cpp
+\\storage10.student.bth.se\profile\erhf15\desktop\git\skripting-project-real\sfmlscripting\sfmlscripting\game.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Character.cpp
+  Generating Code...
+  LINK : \\storage10.student.bth.se\profile\erhf15\Desktop\Git\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe not found or not built by the last incremental link; performing full link
+  sfmlScripting.vcxproj -> \\storage10.student.bth.se\profile\erhf15\Desktop\Git\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe
