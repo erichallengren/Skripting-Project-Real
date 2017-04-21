@@ -8,7 +8,8 @@ private:
 	sf::CircleShape character;
 	sf::Vector2f velocity;
 
-	bool goingUp;
+	int tileSize;
+	float moveCD;
 public:
 	Character();
 	~Character();
