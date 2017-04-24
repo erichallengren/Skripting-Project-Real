@@ -51,10 +51,17 @@ void Monster::move(float sec)
 	}
 
 	//Sätter monstrets nya position
-	this->monster.move(velocity.x, velocity.y);
+	this->monster.move(velocity);
 }
+
+void Monster::draw(sf::RenderTarget &target, sf::RenderStates states)const
+{
+	target.draw(this->monster, states);
+}
+
 
 sf::RectangleShape Monster::getMonster()
 {
 	return this->monster;
 }
+

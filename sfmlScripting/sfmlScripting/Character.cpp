@@ -3,7 +3,7 @@
 Character::Character()
 {
 	this->character = sf::CircleShape(5.f);
-	this->character.setPosition(0, 500);
+	this->character.setPosition(64, 500);
 	this->character.setFillColor(sf::Color::Green);
 
 	this->tileSize = 128; //4 ggr 32
@@ -55,7 +55,13 @@ void Character::move(float sec)
 
 
 	//Sätter karaktärens nya position
-	this->character.move(velocity.x, velocity.y);
+	this->character.move(velocity);
+	this->hitbox.move(velocity);
+}
+
+void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
+{
+	target.draw(this->character);
 }
 
 sf::CircleShape Character::getCharacter()

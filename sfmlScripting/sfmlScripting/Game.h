@@ -7,8 +7,8 @@
 class Game
 {
 private:
-	Character* character;
-	Monster* monster;
+	Character character;
+	Monster monster;
 public:
 	Game();
 	~Game();
