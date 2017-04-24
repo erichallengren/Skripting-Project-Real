@@ -5,7 +5,7 @@ int main()
 {
 	Game* game = new Game();
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
 
 	sf::Clock clock;
 
@@ -21,7 +21,7 @@ int main()
 		sf::Time elapsed = clock.restart();
 		float sec = elapsed.asSeconds();
 		game->update(sec);
-		game->draw(&window);
+		game->draw(window);
 	}
 	return 0;
 }

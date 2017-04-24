@@ -2,11 +2,12 @@
 
 Character::Character()
 {
-	this->character = sf::CircleShape(25.f);
-	this->character.setPosition(0, 500);
+	this->character = sf::CircleShape(5.f);
+	this->character.setPosition(64, 500);
 	this->character.setFillColor(sf::Color::Green);
 
-	this->goingUp = false;
+	this->tileSize = 128; //4 ggr 32
+	this->moveCD = 1;
 }
 
 Character::~Character()
@@ -16,46 +17,51 @@ Character::~Character()
 
 void Character::update(float sec)
 {
-	move(sec);
+	this->moveCD += sec;
+	if (this->moveCD >= 1)
+	{
+		this->move(sec);
+	}
 }
 
 void Character::move(float sec)
 {
-	velocity.x = 0;
-	velocity.y = 0;
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	//{
-	//	this->goingUp = true;
-	//}	
-	//if (this->goingUp == true)
-	//{
-	//	velocity.y += 25 * sec;
-	//}
+	velocity = { 0, 0 };
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		velocity.y -= 25 * sec;
+		velocity.y -= 128;
+		this->moveCD = 0;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		velocity.y += 25 * sec;
+		velocity.y += 128;
+		this->moveCD = 0;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x -= 25 * sec;
+		velocity.x -= 128;
+		this->moveCD = 0;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		velocity.x += 25 * sec;
+		velocity.x += 128;
+		this->moveCD = 0;
 	}
 	
 
 
 	//Sätter karaktärens nya position
-	this->character.move(velocity.x, velocity.y);
+	this->character.move(velocity);
+	this->hitbox.move(velocity);
+}
+
+void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
+{
+	target.draw(this->character);
 }
 
 sf::CircleShape Character::getCharacter()
