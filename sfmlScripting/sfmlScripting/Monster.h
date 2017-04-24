@@ -1,6 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 #include "Includes.h"
+#include "Hitbox.h"
 
 class Monster : public sf::Drawable
 {
@@ -11,6 +12,8 @@ private:
 	sf::Vector2f velocity;
 
 	float moveCD;
+
+	Hitbox hitbox;
 public:
 	Monster();
 	~Monster();
@@ -21,6 +24,7 @@ public:
 
 	//sf::RectangleShape getMonster();
 	sf::RectangleShape getMonster();
+	Hitbox getHitbox();
 };
 
 

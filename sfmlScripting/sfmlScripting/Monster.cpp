@@ -8,6 +8,12 @@ Monster::Monster()
 	this->monster.setFillColor(sf::Color::Black);
 
 	this->moveCD = 1;
+
+	//hitboxs
+	//Samma som monstret
+	this->hitbox.setPosition(this->monster.getPosition());
+	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+	this->hitbox.setSize(sf::Vector2f(64, 64));
 }
 
 Monster::~Monster()
@@ -52,16 +58,26 @@ void Monster::move(float sec)
 
 	//Sätter monstrets nya position
 	this->monster.move(velocity);
+
+	//hitbox
+	this->hitbox.move(velocity);
+	this->hitbox.updateHitboxDrawable();
 }
 
 void Monster::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
-	target.draw(this->monster, states);
+	target.draw(this->hitbox);
+	target.draw(this->monster);
 }
 
 
 sf::RectangleShape Monster::getMonster()
 {
 	return this->monster;
+}
+
+Hitbox Monster::getHitbox()
+{
+	return this->hitbox;
 }
 
