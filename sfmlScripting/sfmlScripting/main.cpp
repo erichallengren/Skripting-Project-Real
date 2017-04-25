@@ -4,7 +4,7 @@
 int main()
 {	
 	sf::Texture texture;
-	if (!texture.loadFromFile("../Sprites/Stone.png"))
+	if (!texture.loadFromFile("../Sprites/SpriteSheet.png"))
 	{	/* error...*/	}
 
 	Game* game = new Game(&texture);
