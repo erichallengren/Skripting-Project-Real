@@ -2,8 +2,12 @@
 #include "Game.h"
 
 int main()
-{
-	Game* game = new Game();
+{	
+	sf::Texture texture;
+	if (!texture.loadFromFile("../Sprites/SpriteSheet.png"))
+	{	/* error...*/	}
+
+	Game* game = new Game(&texture);
 
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
 
