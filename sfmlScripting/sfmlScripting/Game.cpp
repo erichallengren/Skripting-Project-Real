@@ -23,6 +23,7 @@ Game::Game(sf::Texture * texture)
 			this->list[(i * 15) + j] = Tile(texture, mapTile, j * 128, i * 128);
 		}
 	}
+	
 }
 
 Game::~Game()
