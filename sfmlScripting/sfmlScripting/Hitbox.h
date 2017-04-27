@@ -2,10 +2,11 @@
 #define HITBOX_H
 #include "Includes.h"
 
-class Hitbox
+class Hitbox : public sf::Drawable
 {
 private:
 	sf::FloatRect box;
+	sf::RectangleShape hitboxDrawable;
 	sf::Vector2f origin;
 	sf::Vector2f position;
 public:
@@ -17,6 +18,11 @@ public:
 
 	bool intersect(const Hitbox &other);
 	void move(sf::Vector2f velocity);
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
+
+	void updateHitboxDrawable();
+	sf::FloatRect getBox();
+	sf::Vector2f getPosition();
 };
 
 #endif // !HITBOX_H

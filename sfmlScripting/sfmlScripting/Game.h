@@ -20,6 +20,7 @@ public:
 
 	void update(float sec);
 	void draw(sf::RenderWindow& window);
+	void checkCollision();
 };
 
 #endif // !

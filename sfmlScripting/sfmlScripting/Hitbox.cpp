@@ -2,7 +2,9 @@
 
 Hitbox::Hitbox()
 {
-
+	this->hitboxDrawable.setSize(sf::Vector2f(128, 128));
+	this->hitboxDrawable.setOutlineColor(sf::Color::Red);
+	this->hitboxDrawable.setOutlineThickness(5);
 }
 
 Hitbox::~Hitbox()
@@ -30,7 +32,8 @@ void Hitbox::setSize(sf::Vector2f size)
 
 bool Hitbox::intersect(const Hitbox &other)
 {
-	return this->box.intersects(other.box);
+	//return this->box.intersects(other.());
+	return false;
 }
 
 void Hitbox::move(sf::Vector2f velocity)
@@ -39,4 +42,24 @@ void Hitbox::move(sf::Vector2f velocity)
 	this->position.y += velocity.y;
 	this->box.left = position.x - origin.x;
 	this->box.top = position.y - origin.y;
+}
+
+void Hitbox::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(this->hitboxDrawable);
+}
+
+void Hitbox::updateHitboxDrawable()
+{
+	this->hitboxDrawable.setPosition(this->position);
+}
+
+sf::FloatRect Hitbox::getBox()
+{
+	return this->box;
+}
+
+sf::Vector2f Hitbox::getPosition()
+{
+	return this->position;
 }
