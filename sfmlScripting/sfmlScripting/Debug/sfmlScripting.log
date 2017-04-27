@@ -1,1 +1,15 @@
-﻿
+﻿  Tile.cpp
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\tile.cpp(15): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Monster.cpp
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\monster.cpp(12): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\monster.cpp(13): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\monster.cpp(126): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\monster.cpp(127): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+  Hitbox.cpp
+  Game.cpp
+  Character.cpp
+c:\users\erhf15\source\repos\skripting-project-real\sfmlscripting\sfmlscripting\character.cpp(100): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+main.obj : error LNK2019: unresolved external symbol "public: __thiscall Game::Game(class sf::Texture *)" (??0Game@@QAE@PAVTexture@sf@@@Z) referenced in function _main
+C:\Users\Erhf15\Source\Repos\Skripting-Project-Real\sfmlScripting\Debug\sfmlScripting.exe : fatal error LNK1120: 1 unresolved externals
