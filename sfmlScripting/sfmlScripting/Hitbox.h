@@ -21,6 +21,8 @@ public:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 
 	void updateHitboxDrawable();
+	sf::FloatRect getBox();
+	sf::Vector2f getPosition();
 };
 
 #endif // !HITBOX_H

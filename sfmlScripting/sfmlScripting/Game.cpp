@@ -13,8 +13,10 @@ Game::~Game()
 
 void Game::update(float sec)
 {
+	bool moved = false;
+
 	this->character.update(sec);
-	this->monster.update(sec);
+	this->monster.update(this->character);
 	this->checkCollision();
 }
 
@@ -26,15 +28,19 @@ void Game::draw(sf::RenderWindow& window)
 
 	window.draw(monster);
 
-
-
 	window.display();
 }
 
 void Game::checkCollision()
 {
-	if (this->character.getHitbox().intersect(this->monster.getHitbox()) || this->monster.getHitbox().intersect(this->character.getHitbox()))
+	if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox()))
 	{
-		this->character.getCharacter().setFillColor(sf::Color::Black);
+		//this->character.getCharacter().setFillColor(sf::Color::Black);
 	}
+
+	//if (this->character.getHitbox().intersect(this->monster.getHitbox()))
+	//{
+	////	this->character
+	//	//this->character.getCharacter().setFillColor(sf::Color::Black);
+	//}
 }
