@@ -11,8 +11,20 @@ Game::Game(sf::Texture * texture)
 	this->character = Character();
 	this->monster = Monster();
 	//120 lång, en för varje tile på banan
-	string map = "1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890ab";
+	
+	string map = "";//1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890ab
 	string mapTile = "";
+	ifstream myfile("../Maps/map1.txt");
+
+	if (myfile.is_open())
+	{
+		while (getline(myfile, map))
+		{
+			cout << map << '\n';
+		}
+		myfile.close();
+	}
+	else cout << "Unable to open file";
 
 	//map tiles
 	for (int i = 0; i < 8; i++)
