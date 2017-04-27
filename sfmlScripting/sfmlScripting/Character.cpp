@@ -4,7 +4,7 @@ Character::Character()
 {
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
-	this->character.setPosition(128, 512);
+	this->character.setPosition(1024, 512);
 	this->character.setFillColor(sf::Color::Green);
 
 	//middlepoint

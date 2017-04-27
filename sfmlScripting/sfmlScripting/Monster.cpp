@@ -41,24 +41,60 @@ void Monster::move(Character& character)
 {
 	velocity = { 0, 0 };
 
-	//sf::Vector2f 
+	sf::Vector2f rayToCharacter = character.getMiddlePoint() - this->middlePoint;
 
-	int moveNumber = rand() % 4 + 1;
+	//int moveNumber = rand() % 4 + 1;
 
-	switch (moveNumber)
+	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
 	{
-	case 1: 
-		velocity.y -= 128;
-		break;
-	case 2:
-		velocity.y += 128;
-		break;
-	case 3:
-		velocity.x -= 128;
-		break;
-	case 4:
-		velocity.x += 128;
-		break;
+		if (rayToCharacter.y >= 0)
+		{
+			velocity.y += 128;
+		}
+		else
+		{
+			velocity.y -= 128;
+		}
+	}
+	
+	if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
+	{
+		if (rayToCharacter.x >= 0)
+		{
+			velocity.x += 128;
+		}
+		else
+		{
+			velocity.x -= 128;
+		}
+	}
+
+	if (rayToCharacter.x != 0 && rayToCharacter.y != 0)
+	{
+		int randRow = rand() % 1;
+
+		if (randRow == 0)
+		{
+			if (rayToCharacter.x >= 0)
+			{
+				velocity.x += 128;
+			}
+			else
+			{
+				velocity.x -= 128;
+			}
+		}
+		else
+		{
+			if (rayToCharacter.y >= 0)
+			{
+				velocity.y += 128;
+			}
+			else
+			{
+				velocity.y -= 128;
+			}
+		}
 	}
 
 	//Sätter monstrets nya position
