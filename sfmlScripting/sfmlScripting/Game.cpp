@@ -2,19 +2,22 @@
 
 Game::Game()
 {
+	amountOfWalls = 0;
 	this->character = Character();
 	this->monster = Monster();
 }
 
 Game::Game(sf::Texture * texture)
 {
-	this->character = Character();
-	this->monster = Monster();
-	//120 lång, en för varje tile på banan
-	
+	//120 lång, en för varje tile på banan	
 	string map = "";//1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890ab
 	string mapTile = "";
 	ifstream myfile("../Maps/map1.txt");
+
+	amountOfWalls = 0;
+	this->character = Character(texture, 2, 2);
+	this->monster = Monster(texture, 6, 6);
+	
 
 	if (myfile.is_open())
 	{
@@ -26,13 +29,23 @@ Game::Game(sf::Texture * texture)
 	}
 	else cout << "Unable to open file";
 
+	for (int i = 0; i < 120; i++)
+	{
+		this->walls[i] = nullptr;
+	}
+
 	//map tiles
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 15; j++)
 		{
 			mapTile = map.substr((i * 15) + j, 1);
-			this->list[(i * 15) + j] = Tile(texture, mapTile, j * 128, i * 128);
+			
+			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
+			if (mapTile == "1")
+			{
+				this->walls[(i * 15) + j] = list[(i * 15) + j];
+			}
 		}
 	}
 	
@@ -60,7 +73,7 @@ void Game::draw(sf::RenderWindow& window)
 	{
 		for (int j = 0; j < 15; j++)
 		{
-			window.draw(list[(i * 15) + j]);
+			window.draw( * list[(i * 15) + j]);
 		}
 	}
 
@@ -75,7 +88,48 @@ void Game::checkCollision()
 {
 	if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox()))
 	{
-		//this->character.getCharacter().setFillColor(sf::Color::Black);
+		if (character.getLastMoved() == "N")
+		{
+			character.setMove(0, 128);
+		}
+		else if (character.getLastMoved() == "S")
+		{
+			character.setMove(0, -128);
+		}
+		else if (character.getLastMoved() == "W")
+		{
+			character.setMove(128, 0);
+		}
+		else
+		{
+			character.setMove(-128, 0);
+		}
+	}
+
+	for (int i = 0; i < 120; i++)
+	{
+		if (this->walls[i] != nullptr)
+		{
+			if (this->character.getBoundingBox().intersects(this->walls[i]->getBoundingBox()))
+			{
+				if (character.getLastMoved() == "N")
+				{
+					character.setMove(0, 128);
+				}
+				else if(character.getLastMoved() == "S")
+				{
+					character.setMove(0, -128);
+				}
+				else if (character.getLastMoved() == "W")
+				{
+					character.setMove(128, 0);
+				}
+				else
+				{
+					character.setMove(-128, 0);
+				}
+			}
+		}
 	}
 
 	//if (this->character.getHitbox().intersect(this->monster.getHitbox()))
