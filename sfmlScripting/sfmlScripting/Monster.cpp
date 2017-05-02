@@ -23,6 +23,35 @@ Monster::Monster()
 	this->debugMidPoint.setFillColor(sf::Color::Red);
 }
 
+Monster::Monster(sf::Texture * texture, int x, int y)
+	//: monster()
+{
+	this->monsterSize = { 128, 128 };
+	this->monster = sf::RectangleShape(monsterSize);
+	this->monster.setPosition(128, 512);
+	//this->monster.setFillColor(sf::Color::Black);
+
+	//middlepoint
+	this->middlePoint = this->monster.getPosition();
+	this->middlePoint.x += this->monsterSize.x * 0.5;
+	this->middlePoint.y += this->monsterSize.y * 0.5;
+
+	//hitboxs
+	//Samma som monstret
+	this->hitbox.setPosition(this->monster.getPosition());
+	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	//debug
+	this->debugMidPoint.setRadius(10);
+	this->debugMidPoint.setFillColor(sf::Color::Red);
+	//new shit
+	//this->monster.setPosition(x, y);
+	this->monster.setTexture(texture);
+	this->monster.setTextureRect(sf::IntRect(6*32, 0, 32, 32));
+
+}
+
 Monster::~Monster()
 {
 

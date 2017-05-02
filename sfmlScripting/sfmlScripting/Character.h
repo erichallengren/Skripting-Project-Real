@@ -15,10 +15,12 @@ private:
 	int tileSize;
 	float moveCD;
 	bool moved;
+	string lastMove;
 
 	Hitbox hitbox;
 public:
 	Character();
+	Character(sf::Texture * texture, int x = 0, int y = 0);
 	~Character();
 
 	void update(float sec);
@@ -31,9 +33,11 @@ public:
 	Hitbox getHitbox();
 	bool getMoved();
 	sf::Vector2f getMiddlePoint();
+	string getLastMoved();
 
 	void setPosition(int x, int y);
 	void setMoved(bool moved);
+	void setMove(float x, float y);
 };
 
 #endif // !

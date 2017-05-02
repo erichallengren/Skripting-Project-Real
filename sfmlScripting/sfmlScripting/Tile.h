@@ -16,5 +16,5 @@ public:
 	~Tile();
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
-
+	sf::FloatRect getBoundingBox();
 };

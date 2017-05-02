@@ -4,13 +4,16 @@
 #include "Character.h"
 #include "Monster.h"
 #include "Tile.h"
+//#include "Wall.h"
 
 class Game
 {
 private:
 	Character character;
 	Monster monster;
-	Tile list[120];
+	Tile * list[120];
+	int amountOfWalls;
+	Tile * walls[120];
 	
 
 public:

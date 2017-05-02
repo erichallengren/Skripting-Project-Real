@@ -17,7 +17,8 @@ private:
 	Hitbox hitbox;
 public:
 	Monster();
-	~Monster();
+	Monster(sf::Texture * texture, int x = 0, int y = 0);
+	~Monster(); 
 
 	void update(Character& character);
 	void move(Character& character);

@@ -15,9 +15,10 @@ Character::Character()
 	this->tileSize = 128; //4 ggr 32
 	this->moveCD = 1;
 	this->moved = false;
+	this->lastMove = "W";
 
 	//hitbox
-	//Samma som character
+	// character
 	this->hitbox.setPosition(this->character.getPosition());
 	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
@@ -25,6 +26,41 @@ Character::Character()
 	//debug
 	this->debugMidPoint.setRadius(10);
 	this->debugMidPoint.setFillColor(sf::Color::Red);
+}
+
+Character::Character(sf::Texture * texture, int x, int y) 
+	//:character()
+{
+	this->characterSize = 64.f;
+	this->character = sf::CircleShape(this->characterSize);
+	this->character.setPosition(1024, 512);
+	//this->character.setFillColor(sf::Color::Green);
+
+	//middlepoint
+	this->middlePoint = this->character.getPosition();
+	this->middlePoint.x += this->characterSize;
+	this->middlePoint.y += this->characterSize;
+
+	this->tileSize = 128; //4 ggr 32
+	this->moveCD = 1;
+	this->moved = false;
+	this->lastMove = "W";
+
+	//hitbox
+	// character
+	this->hitbox.setPosition(this->character.getPosition());
+	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	//debug
+	this->debugMidPoint.setRadius(10);
+	this->debugMidPoint.setFillColor(sf::Color::Red);
+
+	//new shit
+	//this->character.setPosition(x, y);
+	this->character.setTexture(texture);
+	this->character.setTextureRect(sf::IntRect(32*5, 0, 32, 32));
+
 }
 
 Character::~Character()
@@ -50,6 +86,7 @@ void Character::move(float sec)
 		velocity.y -= 128;
 		this->moveCD = 0;
 		this->moved = true;
+		this->lastMove = "N";
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -57,6 +94,7 @@ void Character::move(float sec)
 		velocity.y += 128;
 		this->moveCD = 0;
 		this->moved = true;
+		this->lastMove = "S";
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -64,6 +102,7 @@ void Character::move(float sec)
 		velocity.x -= 128;
 		this->moveCD = 0;
 		this->moved = true;
+		this->lastMove = "W";
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -71,6 +110,7 @@ void Character::move(float sec)
 		velocity.x += 128;
 		this->moveCD = 0;
 		this->moved = true;
+		this->lastMove = "D";
 	}
 	
 
@@ -133,7 +173,25 @@ sf::Vector2f Character::getMiddlePoint()
 	return this->middlePoint;
 }
 
+string Character::getLastMoved()
+{
+	return this->lastMove;
+}
+
 void Character::setMoved(bool moved)
 {
 	this->moved = moved;
+}
+
+void Character::setMove(float x, float y)
+{
+	velocity = { x, y };
+	this->character.move(velocity);
+
+	//hitbox
+	this->hitbox.move(velocity);
+	this->hitbox.setPosition(hitbox.getPosition());
+	this->hitbox.updateHitboxDrawable();
+
+	this->updateMiddlePoint();
 }
