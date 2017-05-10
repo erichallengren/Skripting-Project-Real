@@ -18,7 +18,7 @@ private:
 
 public:
 	Game();
-	Game(sf::Texture * texture);
+	Game(sf::Texture * texture, sf::Texture * playerTexture);
 	~Game();
 
 	void update(float sec);

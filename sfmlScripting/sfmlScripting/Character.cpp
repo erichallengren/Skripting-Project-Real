@@ -31,6 +31,14 @@ Character::Character()
 Character::Character(sf::Texture * texture, int x, int y) 
 	//:character()
 {
+	this->animatedCharacter = AnimatedSprite(*texture, sf::Vector2i(32.f, 32.f), 0.15f);
+	this->animatedCharacter.setPosition({ 1024, 512 });
+
+	this->animatedCharacter.addAnimation("Idle", { 0, 8 });
+	this->animatedCharacter.addAnimation("Attack", {2, 4});
+
+	this->animatedCharacter.setAnimation("Idle");
+
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
 	this->character.setPosition(1024, 512);
@@ -70,6 +78,7 @@ Character::~Character()
 
 void Character::update(float sec)
 {
+	this->animatedCharacter.update(sec);
 	this->moveCD += sec;
 	if (this->moveCD >= 1)
 	{
@@ -112,11 +121,17 @@ void Character::move(float sec)
 		this->moved = true;
 		this->lastMove = "D";
 	}
-	
+
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		animatedCharacter.playAnimation("Attack", "Idle");
+	}
 
 
 	//Sätter karaktärens nya position
 	this->character.move(velocity);
+	this->animatedCharacter.move(velocity);
 
 	//hitbox
 	this->hitbox.move(velocity);
@@ -145,6 +160,7 @@ void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
 	target.draw(this->hitbox);
 	target.draw(this->character);
 	target.draw(this->debugMidPoint);
+	target.draw(this->animatedCharacter);
 }
 
 
