@@ -7,15 +7,15 @@ Game::Game()
 	this->monster = Monster();
 }
 
-Game::Game(sf::Texture * texture)
+Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 {
 	//120 lång, en för varje tile på banan	
-	string map = "";//1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890abcdefgh1234567890ab
+	string map = "";
 	string mapTile = "";
 	ifstream myfile("../Maps/map1.txt");
 
 	amountOfWalls = 0;
-	this->character = Character(texture, 2, 2);
+	this->character = Character(playerTexture, 2, 2);
 	this->monster = Monster(texture, 6, 6);
 	
 

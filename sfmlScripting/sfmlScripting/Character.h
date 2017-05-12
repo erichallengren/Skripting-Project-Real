@@ -2,10 +2,12 @@
 #define CHARACTER_H
 #include "Includes.h"
 #include "Hitbox.h"
+#include "AnimatedSprite.h"
 
 class Character : public sf::Drawable
 {
 private:
+	AnimatedSprite animatedCharacter;
 	sf::CircleShape character;
 	float characterSize;
 	sf::Vector2f middlePoint;

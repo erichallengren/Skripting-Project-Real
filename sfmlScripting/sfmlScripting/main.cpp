@@ -7,7 +7,11 @@ int main()
 	if (!texture.loadFromFile("../Sprites/SpriteSheet.png"))
 	{	/* error...*/	}
 
-	Game* game = new Game(&texture);
+	sf::Texture playerTexture;
+	if (!playerTexture.loadFromFile("../Sprites/StarPlatinum-sheet.png"))
+		throw "autistic schreecing";
+
+	Game* game = new Game(&texture, &playerTexture);
 
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
 
