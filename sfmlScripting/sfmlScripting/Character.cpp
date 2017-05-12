@@ -203,6 +203,7 @@ void Character::setMove(float x, float y)
 {
 	velocity = { x, y };
 	this->character.move(velocity);
+	this->animatedCharacter.move(velocity);
 
 	//hitbox
 	this->hitbox.move(velocity);

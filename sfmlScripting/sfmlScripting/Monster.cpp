@@ -57,63 +57,26 @@ Monster::~Monster()
 
 }
 
-void Monster::update(Character& character)
+void Monster::update(Character& character, bool nextTo)
 {
 	if (character.getMoved() == true)
 	{
-		this->move(character);
+		this->move(character, nextTo);
 		character.setMoved(false);
 	}
 }
 
-void Monster::move(Character& character)
+void Monster::move(Character& character, bool nextTo)
 {
 	velocity = { 0, 0 };
 
 	sf::Vector2f rayToCharacter = character.getMiddlePoint() - this->middlePoint;
 
-	//int moveNumber = rand() % 4 + 1;
+	int moveNumber = rand() % 1 + 1;
 
-	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
+	if(nextTo == false)
 	{
-		if (rayToCharacter.y >= 0)
-		{
-			velocity.y += 128;
-		}
-		else
-		{
-			velocity.y -= 128;
-		}
-	}
-	
-	if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
-	{
-		if (rayToCharacter.x >= 0)
-		{
-			velocity.x += 128;
-		}
-		else
-		{
-			velocity.x -= 128;
-		}
-	}
-
-	if (rayToCharacter.x != 0 && rayToCharacter.y != 0)
-	{
-		int randRow = rand() % 1;
-
-		if (randRow == 0)
-		{
-			if (rayToCharacter.x >= 0)
-			{
-				velocity.x += 128;
-			}
-			else
-			{
-				velocity.x -= 128;
-			}
-		}
-		else
+		if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
 		{
 			if (rayToCharacter.y >= 0)
 			{
@@ -124,7 +87,60 @@ void Monster::move(Character& character)
 				velocity.y -= 128;
 			}
 		}
+	
+		if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
+		{
+			if (rayToCharacter.x >= 0)
+			{
+				velocity.x += 128;
+			}
+			else
+			{
+				velocity.x -= 128;
+			}
+		}
+
+		if (rayToCharacter.x != 0 && rayToCharacter.y != 0)
+		{
+			int randRow = rand() % 2 + 1;
+
+			if (randRow == 1)
+			{
+				if (rayToCharacter.x >= 0)
+				{
+					velocity.x += 128;
+				}
+				else
+				{
+					velocity.x -= 128;
+				}
+			}
+			else if (randRow == 2)
+			{
+				if (rayToCharacter.y >= 0)
+				{
+					velocity.y += 128;
+				}
+				else
+				{
+					velocity.y -= 128;
+				}
+			}
+		}
 	}
+	else
+	{
+		//hitboxs
+		//Samma som monstret
+		this->hitbox.setPosition(this->monster.getPosition());
+		this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+		this->hitbox.setSize(sf::Vector2f(128, 128));
+		//hitbox move
+		this->hitbox.move(velocity);
+		this->hitbox.setPosition(hitbox.getPosition());
+		this->hitbox.updateHitboxDrawable();
+	}
+
 
 	//Sätter monstrets nya position
 	this->monster.move(velocity);
@@ -172,5 +188,10 @@ Hitbox Monster::getHitbox()
 sf::FloatRect Monster::getBoundingBox()
 {
 	return monster.getGlobalBounds();
+}
+
+sf::Vector2f Monster::getMiddlePoint()
+{
+	return this->middlePoint;
 }
 

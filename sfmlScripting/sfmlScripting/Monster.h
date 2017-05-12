@@ -20,9 +20,8 @@ public:
 	Monster(sf::Texture * texture, int x = 0, int y = 0);
 	~Monster(); 
 
-	void update(Character& character);
-	void move(Character& character);
-	void checkIfCanAttack();
+	void update(Character& character, bool nextTo);
+	void move(Character& character, bool nextTo);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
@@ -31,6 +30,7 @@ public:
 	sf::RectangleShape getMonster();
 	Hitbox getHitbox();
 	sf::FloatRect getBoundingBox();
+	sf::Vector2f getMiddlePoint();
 
 	//bool monsterCollision(const Character &other);
 };

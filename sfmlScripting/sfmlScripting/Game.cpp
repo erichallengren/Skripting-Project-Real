@@ -59,10 +59,21 @@ Game::~Game()
 void Game::update(float sec)
 {
 	bool moved = false;
-
+	bool nextTo = false;
+	sf::Vector2f distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if(distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128 )
+	{
+		nextTo = true;
+	}
 	this->character.update(sec);
-	this->monster.update(this->character);
+	distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
+	{
+		nextTo = true;
+	}
+	this->monster.update(this->character, nextTo);
 	this->checkCollision();
+	nextTo = false;
 }
 
 void Game::draw(sf::RenderWindow& window)

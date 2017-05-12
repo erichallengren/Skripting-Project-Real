@@ -37,6 +37,7 @@ public:
 	sf::Vector2f getMiddlePoint();
 	string getLastMoved();
 
+
 	void setPosition(int x, int y);
 	void setMoved(bool moved);
 	void setMove(float x, float y);
