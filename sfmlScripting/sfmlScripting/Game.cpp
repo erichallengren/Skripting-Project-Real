@@ -9,6 +9,7 @@ Game::Game()
 
 Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 {
+	score = 0;
 	//120 lång, en för varje tile på banan	
 	string map = "";
 	string mapTile = "";
@@ -97,7 +98,7 @@ void Game::draw(sf::RenderWindow& window)
 
 void Game::checkCollision()
 {
-	if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox()))
+	if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox()) || this->character.getBoundingBox().intersects(this->monster.getHurtboxBoundingBox()))
 	{
 		if (character.getLastMoved() == "N")
 		{
@@ -115,6 +116,27 @@ void Game::checkCollision()
 		{
 			character.setMove(-128, 0);
 		}
+		this->score--;
+	}
+	if (this->monster.getBoundingBox().intersects(this->character.getHitboxBoundingBox()))
+	{
+		if (character.getLastMoved() == "N")
+		{
+			monster.setMove(0, -128);
+		}
+		else if (character.getLastMoved() == "S")
+		{
+			monster.setMove(0, 128);
+		}
+		else if (character.getLastMoved() == "W")
+		{
+			monster.setMove(-128, 0);
+		}
+		else
+		{
+			monster.setMove(128, 0);
+		}
+		this->score++;
 	}
 
 	for (int i = 0; i < 120; i++)

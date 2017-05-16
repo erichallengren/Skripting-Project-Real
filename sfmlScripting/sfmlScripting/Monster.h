@@ -15,6 +15,7 @@ private:
 	sf::CircleShape debugMidPoint;
 
 	Hitbox hitbox;
+	Hitbox hurtbox;
 public:
 	Monster();
 	Monster(sf::Texture * texture, int x = 0, int y = 0);
@@ -29,8 +30,11 @@ public:
 	//sf::RectangleShape getMonster();
 	sf::RectangleShape getMonster();
 	Hitbox getHitbox();
+	Hitbox getHurtbox();
 	sf::FloatRect getBoundingBox();
+	sf::FloatRect getHurtboxBoundingBox();
 	sf::Vector2f getMiddlePoint();
+	void setMove(float x, float y);
 
 	//bool monsterCollision(const Character &other);
 };

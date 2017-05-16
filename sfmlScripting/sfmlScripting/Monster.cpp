@@ -18,6 +18,10 @@ Monster::Monster()
 	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
 
+	this->hurtbox.setPosition(this->monster.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
+
 	//debug
 	this->debugMidPoint.setRadius(10);
 	this->debugMidPoint.setFillColor(sf::Color::Red);
@@ -41,6 +45,10 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 	this->hitbox.setPosition(this->monster.getPosition());
 	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	this->hurtbox.setPosition(this->monster.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
 
 	//debug
 	this->debugMidPoint.setRadius(10);
@@ -74,21 +82,36 @@ void Monster::move(Character& character, bool nextTo)
 
 	int moveNumber = rand() % 1 + 1;
 
-	if(nextTo == false)
-	{
-		if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
-		{
-			if (rayToCharacter.y >= 0)
-			{
-				velocity.y += 128;
-			}
-			else
-			{
-				velocity.y -= 128;
-			}
-		}
 	
-		if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
+	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
+	{
+		if (rayToCharacter.y >= 0)
+		{
+			velocity.y += 128;
+		}
+		else
+		{
+			velocity.y -= 128;
+		}
+	}
+	
+	if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
+	{
+		if (rayToCharacter.x >= 0)
+		{
+			velocity.x += 128;
+		}
+		else
+		{
+			velocity.x -= 128;
+		}
+	}
+
+	if (rayToCharacter.x != 0 && rayToCharacter.y != 0)
+	{
+		int randRow = rand() % 2 + 1;
+
+		if (randRow == 1)
 		{
 			if (rayToCharacter.x >= 0)
 			{
@@ -99,34 +122,32 @@ void Monster::move(Character& character, bool nextTo)
 				velocity.x -= 128;
 			}
 		}
-
-		if (rayToCharacter.x != 0 && rayToCharacter.y != 0)
+		else if (randRow == 2)
 		{
-			int randRow = rand() % 2 + 1;
-
-			if (randRow == 1)
+			if (rayToCharacter.y >= 0)
 			{
-				if (rayToCharacter.x >= 0)
-				{
-					velocity.x += 128;
-				}
-				else
-				{
-					velocity.x -= 128;
-				}
+				velocity.y += 128;
 			}
-			else if (randRow == 2)
+			else
 			{
-				if (rayToCharacter.y >= 0)
-				{
-					velocity.y += 128;
-				}
-				else
-				{
-					velocity.y -= 128;
-				}
+				velocity.y -= 128;
 			}
 		}
+	}
+	if (nextTo == false)
+	{
+		//Sätter monstrets nya position
+		this->monster.move(velocity);
+
+		//hitbox
+		this->hitbox.move(velocity);
+		this->hitbox.setPosition(hitbox.getPosition());
+		this->hitbox.updateHitboxDrawable();
+
+		this->hurtbox.setPosition(hitbox.getPosition());
+		this->hurtbox.updateHitboxDrawable();
+
+		this->updateMiddlePoint();
 	}
 	else
 	{
@@ -135,22 +156,19 @@ void Monster::move(Character& character, bool nextTo)
 		this->hitbox.setPosition(this->monster.getPosition());
 		this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
 		this->hitbox.setSize(sf::Vector2f(128, 128));
-		//hitbox move
-		this->hitbox.move(velocity);
-		this->hitbox.setPosition(hitbox.getPosition());
-		this->hitbox.updateHitboxDrawable();
+
+		//Samma som monstret
+		this->hurtbox.setPosition(this->monster.getPosition());
+		this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
+		this->hurtbox.setSize(sf::Vector2f(128, 128));
+		//hurtbox move
+		this->hurtbox.move(velocity);
+		this->hurtbox.setPosition(hurtbox.getPosition());
+		this->hurtbox.updateHitboxDrawable();
 	}
 
 
-	//Sätter monstrets nya position
-	this->monster.move(velocity);
 
-	//hitbox
-	this->hitbox.move(velocity);
-	this->hitbox.setPosition(hitbox.getPosition());
-	this->hitbox.updateHitboxDrawable();
-
-	this->updateMiddlePoint();
 }
 
 void checkIfCanAttack()
@@ -160,6 +178,7 @@ void checkIfCanAttack()
 
 void Monster::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
+	target.draw(this->hurtbox);
 	target.draw(this->hitbox);
 	target.draw(this->monster);
 	target.draw(this->debugMidPoint);
@@ -185,13 +204,42 @@ Hitbox Monster::getHitbox()
 	return this->hitbox;
 }
 
+Hitbox Monster::getHurtbox()
+{
+	return this->hurtbox;
+}
+
 sf::FloatRect Monster::getBoundingBox()
 {
-	return monster.getGlobalBounds();
+	return this->hitbox.getBoundingBox();
+}
+
+sf::FloatRect Monster::getHurtboxBoundingBox()
+{
+	return this->hurtbox.getBoundingBox();
 }
 
 sf::Vector2f Monster::getMiddlePoint()
 {
 	return this->middlePoint;
+}
+
+void Monster::setMove(float x, float y)
+{
+		velocity = { x, y };
+		this->monster.move(velocity);
+		//this->animatedMonster.move(velocity);
+
+		//hitbox
+
+		this->hitbox.move(velocity);
+		this->hitbox.setPosition(hitbox.getPosition());
+		this->hitbox.updateHitboxDrawable();
+
+		this->hurtbox.move(velocity);
+		this->hurtbox.setPosition(hurtbox.getPosition());
+		this->hurtbox.updateHitboxDrawable();
+
+		this->updateMiddlePoint();
 }
 

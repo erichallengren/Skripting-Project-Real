@@ -14,7 +14,7 @@ private:
 	Tile * list[120];
 	int amountOfWalls;
 	Tile * walls[120];
-	
+	int score;
 
 public:
 	Game();

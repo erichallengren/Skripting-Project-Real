@@ -12,14 +12,17 @@ private:
 	float characterSize;
 	sf::Vector2f middlePoint;
 	sf::Vector2f velocity;
+	sf::Vector2f velocityh;
 	sf::CircleShape debugMidPoint;
 
 	int tileSize;
 	float moveCD;
 	bool moved;
 	string lastMove;
+	bool attacking;
 
 	Hitbox hitbox;
+	Hitbox hurtbox;
 public:
 	Character();
 	Character(sf::Texture * texture, int x = 0, int y = 0);
@@ -32,7 +35,9 @@ public:
 
 	sf::CircleShape getCharacter();
 	sf::FloatRect getBoundingBox();
+	sf::FloatRect getHitboxBoundingBox();
 	Hitbox getHitbox();
+	Hitbox getHurtbox();
 	bool getMoved();
 	sf::Vector2f getMiddlePoint();
 	string getLastMoved();

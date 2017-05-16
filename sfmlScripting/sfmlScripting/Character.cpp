@@ -16,12 +16,17 @@ Character::Character()
 	this->moveCD = 1;
 	this->moved = false;
 	this->lastMove = "W";
+	this->attacking = false;
 
 	//hitbox
 	// character
 	this->hitbox.setPosition(this->character.getPosition());
 	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	this->hurtbox.setPosition(this->character.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
 
 	//debug
 	this->debugMidPoint.setRadius(10);
@@ -60,6 +65,10 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
 
+	this->hurtbox.setPosition(this->character.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
+
 	//debug
 	this->debugMidPoint.setRadius(10);
 	this->debugMidPoint.setFillColor(sf::Color::Red);
@@ -89,44 +98,136 @@ void Character::update(float sec)
 void Character::move(float sec)
 {
 	velocity = { 0, 0 };
+	velocityh = { 0, 0 };
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		attacking = true;
+	}
+
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		velocity.y -= 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "N";
+		if(attacking == false)
+		{
+			velocity.y -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "N";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.y -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			this->hurtbox.move(velocityh);
+			this->hurtbox.setPosition(hurtbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		velocity.y += 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "S";
+		if (attacking == false)
+		{
+			velocity.y += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "S";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.y += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			this->hurtbox.move(velocityh);
+			this->hurtbox.setPosition(hurtbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x -= 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "W";
+		if (attacking == false)
+		{
+			velocity.x -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "W";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.x -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			this->hurtbox.move(velocityh);
+			this->hurtbox.setPosition(hurtbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		velocity.x += 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "D";
+		if (attacking == false)
+		{
+			velocity.x += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "D";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.x += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			this->hurtbox.move(velocityh);
+			this->hurtbox.setPosition(hurtbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		animatedCharacter.playAnimation("Attack", "Idle");
-	}
+	
 
 
 	//Sätter karaktärens nya position
@@ -137,6 +238,11 @@ void Character::move(float sec)
 	this->hitbox.move(velocity);
 	this->hitbox.setPosition(hitbox.getPosition());
 	this->hitbox.updateHitboxDrawable();
+
+	//hitbox
+	this->hurtbox.move(velocity);
+	this->hurtbox.setPosition(hurtbox.getPosition());
+	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }
@@ -157,6 +263,7 @@ void Character::setPosition(int x, int y)
 
 void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
+	target.draw(this->hurtbox);
 	target.draw(this->hitbox);
 	target.draw(this->character);
 	target.draw(this->debugMidPoint);
@@ -174,9 +281,19 @@ sf::FloatRect Character::getBoundingBox()
 	return character.getGlobalBounds();
 }
 
+sf::FloatRect Character::getHitboxBoundingBox()
+{
+	return this->hurtbox.getBoundingBox();
+}
+
 Hitbox Character::getHitbox()
 {
 	return this->hitbox;
+}
+
+Hitbox Character::getHurtbox()
+{
+	return this->hurtbox;
 }
 
 bool Character::getMoved()
@@ -206,9 +323,14 @@ void Character::setMove(float x, float y)
 	this->animatedCharacter.move(velocity);
 
 	//hitbox
+
 	this->hitbox.move(velocity);
 	this->hitbox.setPosition(hitbox.getPosition());
 	this->hitbox.updateHitboxDrawable();
+
+	this->hurtbox.move(velocity);
+	this->hurtbox.setPosition(hurtbox.getPosition());
+	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }
