@@ -16,6 +16,7 @@ private:
 
 	Hitbox hitbox;
 	Hitbox hurtbox;
+	bool hasAttacked;
 public:
 	Monster();
 	Monster(sf::Texture * texture, int x = 0, int y = 0);
@@ -34,7 +35,10 @@ public:
 	sf::FloatRect getBoundingBox();
 	sf::FloatRect getHurtboxBoundingBox();
 	sf::Vector2f getMiddlePoint();
+	bool getHasAttacked();
+
 	void setMove(float x, float y);
+	void setHasAttacked(bool state);
 
 	//bool monsterCollision(const Character &other);
 };

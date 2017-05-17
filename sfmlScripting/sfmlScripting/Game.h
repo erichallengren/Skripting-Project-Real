@@ -15,6 +15,8 @@ private:
 	int amountOfWalls;
 	Tile * walls[120];
 	int score;
+	sf::Font font;
+	sf::Text scoreDisplay;
 
 public:
 	Game();

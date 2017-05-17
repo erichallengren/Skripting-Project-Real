@@ -20,6 +20,7 @@ private:
 	bool moved;
 	string lastMove;
 	bool attacking;
+	bool hasAttacked;
 
 	Hitbox hitbox;
 	Hitbox hurtbox;
@@ -41,11 +42,13 @@ public:
 	bool getMoved();
 	sf::Vector2f getMiddlePoint();
 	string getLastMoved();
+	bool getHasAttacked();
 
 
 	void setPosition(int x, int y);
 	void setMoved(bool moved);
 	void setMove(float x, float y);
+	void setHasAttacked(bool state);
 };
 
 #endif // !

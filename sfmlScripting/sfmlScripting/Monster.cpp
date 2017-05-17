@@ -6,6 +6,7 @@ Monster::Monster()
 	this->monster = sf::RectangleShape(monsterSize);
 	this->monster.setPosition(128, 512);
 	this->monster.setFillColor(sf::Color::Black);
+	this->hasAttacked = false;
 	
 	//middlepoint
 	this->middlePoint = this->monster.getPosition();
@@ -34,6 +35,7 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 	this->monster = sf::RectangleShape(monsterSize);
 	this->monster.setPosition(128, 512);
 	//this->monster.setFillColor(sf::Color::Black);
+	this->hasAttacked = false;
 
 	//middlepoint
 	this->middlePoint = this->monster.getPosition();
@@ -138,6 +140,7 @@ void Monster::move(Character& character, bool nextTo)
 	{
 		//Sätter monstrets nya position
 		this->monster.move(velocity);
+		this->hasAttacked = false;
 
 		//hitbox
 		this->hitbox.move(velocity);
@@ -156,6 +159,7 @@ void Monster::move(Character& character, bool nextTo)
 		this->hitbox.setPosition(this->monster.getPosition());
 		this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
 		this->hitbox.setSize(sf::Vector2f(128, 128));
+		this->hasAttacked = true;
 
 		//Samma som monstret
 		this->hurtbox.setPosition(this->monster.getPosition());
@@ -224,6 +228,11 @@ sf::Vector2f Monster::getMiddlePoint()
 	return this->middlePoint;
 }
 
+bool Monster::getHasAttacked()
+{
+	return this->hasAttacked;
+}
+
 void Monster::setMove(float x, float y)
 {
 		velocity = { x, y };
@@ -241,5 +250,10 @@ void Monster::setMove(float x, float y)
 		this->hurtbox.updateHitboxDrawable();
 
 		this->updateMiddlePoint();
+}
+
+void Monster::setHasAttacked(bool state)
+{
+	this->hasAttacked = state;
 }
 

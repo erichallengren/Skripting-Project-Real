@@ -17,6 +17,7 @@ Character::Character()
 	this->moved = false;
 	this->lastMove = "W";
 	this->attacking = false;
+	this->hasAttacked = false;
 
 	//hitbox
 	// character
@@ -58,6 +59,8 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->moveCD = 1;
 	this->moved = false;
 	this->lastMove = "W";
+	this->attacking = false;
+	this->hasAttacked = false;
 
 	//hitbox
 	// character
@@ -116,6 +119,7 @@ void Character::move(float sec)
 			this->lastMove = "N";
 			this->hurtbox.setPosition(hitbox.getPosition());
 			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
 		}
 		else
 		{
@@ -124,15 +128,16 @@ void Character::move(float sec)
 			this->moveCD = 0;
 			this->moved = true;
 			attacking = false;
+			hasAttacked = true;
 
 			//Samma som caractären
 			this->hurtbox.setPosition(this->character.getPosition());
 			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 			this->hurtbox.setSize(sf::Vector2f(128, 128));
 			//hurtbox move
-			this->hurtbox.move(velocityh);
-			this->hurtbox.setPosition(hurtbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
 		}
 	}
 
@@ -146,6 +151,7 @@ void Character::move(float sec)
 			this->lastMove = "S";
 			this->hurtbox.setPosition(hitbox.getPosition());
 			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
 		}
 		else
 		{
@@ -154,15 +160,16 @@ void Character::move(float sec)
 			this->moveCD = 0;
 			this->moved = true;
 			attacking = false;
+			hasAttacked = true;
 
 			//Samma som caractären
 			this->hurtbox.setPosition(this->character.getPosition());
 			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 			this->hurtbox.setSize(sf::Vector2f(128, 128));
 			//hurtbox move
-			this->hurtbox.move(velocityh);
-			this->hurtbox.setPosition(hurtbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
 		}
 	}
 
@@ -176,6 +183,7 @@ void Character::move(float sec)
 			this->lastMove = "W";
 			this->hurtbox.setPosition(hitbox.getPosition());
 			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
 		}
 		else
 		{
@@ -184,15 +192,16 @@ void Character::move(float sec)
 			this->moveCD = 0;
 			this->moved = true;
 			attacking = false;
+			hasAttacked = true;
 
 			//Samma som caractären
 			this->hurtbox.setPosition(this->character.getPosition());
 			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 			this->hurtbox.setSize(sf::Vector2f(128, 128));
 			//hurtbox move
-			this->hurtbox.move(velocityh);
-			this->hurtbox.setPosition(hurtbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
 		}
 	}
 
@@ -206,6 +215,7 @@ void Character::move(float sec)
 			this->lastMove = "D";
 			this->hurtbox.setPosition(hitbox.getPosition());
 			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
 		}
 		else
 		{
@@ -214,15 +224,16 @@ void Character::move(float sec)
 			this->moveCD = 0;
 			this->moved = true;
 			attacking = false;
+			hasAttacked = true;
 
 			//Samma som caractären
 			this->hurtbox.setPosition(this->character.getPosition());
 			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 			this->hurtbox.setSize(sf::Vector2f(128, 128));
 			//hurtbox move
-			this->hurtbox.move(velocityh);
-			this->hurtbox.setPosition(hurtbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
 		}
 	}
 
@@ -311,6 +322,11 @@ string Character::getLastMoved()
 	return this->lastMove;
 }
 
+bool Character::getHasAttacked()
+{
+	return this->hasAttacked;
+}
+
 void Character::setMoved(bool moved)
 {
 	this->moved = moved;
@@ -333,4 +349,9 @@ void Character::setMove(float x, float y)
 	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
+}
+
+void Character::setHasAttacked(bool state)
+{
+	this->hasAttacked = state;
 }
