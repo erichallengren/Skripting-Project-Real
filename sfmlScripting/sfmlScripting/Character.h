@@ -29,8 +29,8 @@ public:
 	Character(sf::Texture * texture, int x = 0, int y = 0);
 	~Character();
 
-	void update(float sec);
-	void move(float sec);
+	void update(float sec, lua_State * L);
+	void move(float sec, lua_State * L);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
 

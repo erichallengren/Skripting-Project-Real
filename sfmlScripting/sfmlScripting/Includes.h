@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <lua.hpp>
 using namespace std;
 
 #endif // !INCLUDE_H

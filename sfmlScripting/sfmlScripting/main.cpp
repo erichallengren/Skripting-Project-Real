@@ -1,8 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
 
+
 int main()
 {	
+	lua_State * L = luaL_newstate();
+	luaL_openlibs(L);
+
 	sf::Texture texture;
 	if (!texture.loadFromFile("../Sprites/SpriteSheet.png"))
 	{	/* error...*/	}
@@ -28,7 +32,7 @@ int main()
 
 		sf::Time elapsed = clock.restart();
 		float sec = elapsed.asSeconds();
-		game->update(sec);
+		game->update(sec, L);
 		game->draw(window);
 	}
 	return 0;

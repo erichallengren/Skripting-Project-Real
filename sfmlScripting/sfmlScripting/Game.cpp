@@ -69,7 +69,7 @@ Game::~Game()
 
 }
 
-void Game::update(float sec)
+void Game::update(float sec, lua_State * L)
 {
 	bool moved = false;
 	bool nextTo = false;

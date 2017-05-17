@@ -23,7 +23,7 @@ public:
 	Game(sf::Texture * texture, sf::Texture * playerTexture);
 	~Game();
 
-	void update(float sec);
+	void update(float sec, lua_State * L);
 	void draw(sf::RenderWindow& window);
 	void checkCollision();
 };
