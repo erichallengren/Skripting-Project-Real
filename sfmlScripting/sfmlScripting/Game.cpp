@@ -78,7 +78,7 @@ void Game::update(float sec, lua_State * L)
 	{
 		nextTo = true;
 	}
-	this->character.update(sec);
+	this->character.update(sec, L);
 	distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
 	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
 	{

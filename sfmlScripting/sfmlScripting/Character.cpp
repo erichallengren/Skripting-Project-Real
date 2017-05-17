@@ -100,23 +100,23 @@ void Character::update(float sec, lua_State * L)
 
 void Character::move(float sec, lua_State * L)
 {
-	int error = luaL_dofile(L, "character.lua");
+	//int error = luaL_dofile(L, "character.lua");
 
-	lua_getglobal(L, "modVelocityN");
+	//lua_getglobal(L, "modVelocityN");
 
-	lua_pushnumber(L, velocity.y);
-	lua_pushnumber(L, this->moveCD);
-	lua_pushboolean(L, this->moved);
-	lua_pushstring(L, this->lastMove.c_str());
+	//lua_pushnumber(L, velocity.y);
+	//lua_pushnumber(L, this->moveCD);
+	//lua_pushboolean(L, this->moved);
+	//lua_pushstring(L, this->lastMove.c_str());
 
-	error = lua_pcall(L, 4, 4, NULL);
+	//error = lua_pcall(L, 4, 4, NULL);
 
-	this->lastMove = lua_tostring(L, -1); //får sista
-	this->moved = lua_toboolean(L, -2);
-	this->moveCD = lua_tonumber(L, -3);
-	velocity.y = lua_tonumber(L, -4);
+	//this->lastMove = lua_tostring(L, -1); //får sista
+	//this->moved = lua_toboolean(L, -2);
+	//this->moveCD = lua_tonumber(L, -3);
+	//velocity.y = lua_tonumber(L, -4);
 
-	lua_pop(L, 4); //tar bort alla fyra
+	//lua_pop(L, 4); //tar bort alla fyra
 
 	velocity = { 0, 0 };
 	velocityh = { 0, 0 };
