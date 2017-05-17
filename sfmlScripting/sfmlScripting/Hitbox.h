@@ -23,6 +23,7 @@ public:
 	void updateHitboxDrawable();
 	sf::FloatRect getBox();
 	sf::Vector2f getPosition();
+	sf::FloatRect getBoundingBox();
 };
 
 #endif // !HITBOX_H

@@ -63,3 +63,8 @@ sf::Vector2f Hitbox::getPosition()
 {
 	return this->position;
 }
+
+sf::FloatRect Hitbox::getBoundingBox()
+{
+	return this->hitboxDrawable.getGlobalBounds();
+}

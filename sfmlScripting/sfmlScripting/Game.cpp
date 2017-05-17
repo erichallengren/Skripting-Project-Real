@@ -9,10 +9,21 @@ Game::Game()
 
 Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 {
+	score = 0;
 	//120 lång, en för varje tile på banan	
 	string map = "";
 	string mapTile = "";
 	ifstream myfile("../Maps/map1.txt");
+
+	if (!font.loadFromFile("arial.ttf"))
+	{
+		//error
+	}
+	scoreDisplay.setFont(font);
+	scoreDisplay.setString("Score: " + std::to_string(score));
+	scoreDisplay.setCharacterSize(24);
+	scoreDisplay.setFillColor(sf::Color::Red);
+
 
 	amountOfWalls = 0;
 	this->character = Character(playerTexture, 2, 2);
@@ -28,6 +39,8 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 		myfile.close();
 	}
 	else cout << "Unable to open file";
+
+
 
 	for (int i = 0; i < 120; i++)
 	{
@@ -56,13 +69,26 @@ Game::~Game()
 
 }
 
-void Game::update(float sec)
+void Game::update(float sec, lua_State * L)
 {
 	bool moved = false;
-
-	this->character.update(sec);
-	this->monster.update(this->character);
+	bool nextTo = false;
+	sf::Vector2f distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if(distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128 )
+	{
+		nextTo = true;
+	}
+	this->character.update(sec, L);
+	distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
+	{
+		nextTo = true;
+	}
+	this->monster.update(this->character, nextTo);
 	this->checkCollision();
+
+	scoreDisplay.setString("Score: " + std::to_string(score));
+	nextTo = false;
 }
 
 void Game::draw(sf::RenderWindow& window)
@@ -81,30 +107,76 @@ void Game::draw(sf::RenderWindow& window)
 
 	window.draw(monster);
 
+	window.draw(scoreDisplay);
+
 	window.display();
 }
 
 void Game::checkCollision()
 {
-	if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox()))
+	bool nextTo = false;
+	sf::Vector2f distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
 	{
-		if (character.getLastMoved() == "N")
-		{
-			character.setMove(0, 128);
-		}
-		else if (character.getLastMoved() == "S")
-		{
-			character.setMove(0, -128);
-		}
-		else if (character.getLastMoved() == "W")
-		{
-			character.setMove(128, 0);
-		}
-		else
-		{
-			character.setMove(-128, 0);
-		}
+		nextTo = true;
 	}
+	else if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
+	{
+		nextTo = true;
+	}
+	bool caracterAtt = this->character.getHasAttacked();
+	bool monsterAtt = this->monster.getHasAttacked();
+	if (caracterAtt && !monsterAtt)
+	{
+		score++;
+		this->character.setHasAttacked(false);
+	}
+	else if (!caracterAtt && monsterAtt)
+	{
+		score--;
+		this->monster.setHasAttacked(false);
+	}
+
+	//if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox())/* || this->character.getBoundingBox().intersects(this->monster.getHurtboxBoundingBox())*/)
+	//{
+	//	if (character.getLastMoved() == "N")
+	//	{
+	//		character.setMove(0, 128);
+	//	}
+	//	else if (character.getLastMoved() == "S")
+	//	{
+	//		character.setMove(0, -128);
+	//	}
+	//	else if (character.getLastMoved() == "W")
+	//	{
+	//		character.setMove(128, 0);
+	//	}
+	//	else
+	//	{
+	//		character.setMove(-128, 0);
+	//	}
+	//	this->score--;
+	//}
+	//if (this->monster.getBoundingBox().intersects(this->character.getHitboxBoundingBox()))
+	//{
+	//	if (character.getLastMoved() == "N")
+	//	{
+	//		monster.setMove(0, -128);
+	//	}
+	//	else if (character.getLastMoved() == "S")
+	//	{
+	//		monster.setMove(0, 128);
+	//	}
+	//	else if (character.getLastMoved() == "W")
+	//	{
+	//		monster.setMove(-128, 0);
+	//	}
+	//	else
+	//	{
+	//		monster.setMove(128, 0);
+	//	}
+	//	this->score++;
+	//}
 
 	for (int i = 0; i < 120; i++)
 	{

@@ -14,14 +14,16 @@ private:
 	Tile * list[120];
 	int amountOfWalls;
 	Tile * walls[120];
-	
+	int score;
+	sf::Font font;
+	sf::Text scoreDisplay;
 
 public:
 	Game();
 	Game(sf::Texture * texture, sf::Texture * playerTexture);
 	~Game();
 
-	void update(float sec);
+	void update(float sec, lua_State * L);
 	void draw(sf::RenderWindow& window);
 	void checkCollision();
 };

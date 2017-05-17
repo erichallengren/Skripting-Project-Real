@@ -16,12 +16,18 @@ Character::Character()
 	this->moveCD = 1;
 	this->moved = false;
 	this->lastMove = "W";
+	this->attacking = false;
+	this->hasAttacked = false;
 
 	//hitbox
 	// character
 	this->hitbox.setPosition(this->character.getPosition());
 	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	this->hurtbox.setPosition(this->character.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
 
 	//debug
 	this->debugMidPoint.setRadius(10);
@@ -53,12 +59,18 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->moveCD = 1;
 	this->moved = false;
 	this->lastMove = "W";
+	this->attacking = false;
+	this->hasAttacked = false;
 
 	//hitbox
 	// character
 	this->hitbox.setPosition(this->character.getPosition());
 	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
 	this->hitbox.setSize(sf::Vector2f(128, 128));
+
+	this->hurtbox.setPosition(this->character.getPosition());
+	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+	this->hurtbox.setSize(sf::Vector2f(128, 128));
 
 	//debug
 	this->debugMidPoint.setRadius(10);
@@ -76,57 +88,175 @@ Character::~Character()
 
 }
 
-void Character::update(float sec)
+void Character::update(float sec, lua_State * L)
 {
 	this->animatedCharacter.update(sec);
 	this->moveCD += sec;
 	if (this->moveCD >= 1)
 	{
-		this->move(sec);
+		this->move(sec, L);
 	}
 }
 
-void Character::move(float sec)
+void Character::move(float sec, lua_State * L)
 {
+	//int error = luaL_dofile(L, "character.lua");
+
+	//lua_getglobal(L, "modVelocityN");
+
+	//lua_pushnumber(L, velocity.y);
+	//lua_pushnumber(L, this->moveCD);
+	//lua_pushboolean(L, this->moved);
+	//lua_pushstring(L, this->lastMove.c_str());
+
+	//error = lua_pcall(L, 4, 4, NULL);
+
+	//this->lastMove = lua_tostring(L, -1); //får sista
+	//this->moved = lua_toboolean(L, -2);
+	//this->moveCD = lua_tonumber(L, -3);
+	//velocity.y = lua_tonumber(L, -4);
+
+	//lua_pop(L, 4); //tar bort alla fyra
+
 	velocity = { 0, 0 };
+	velocityh = { 0, 0 };
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		attacking = true;
+	}
+
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		velocity.y -= 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "N";
+		if(attacking == false)
+		{
+			velocity.y -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "N";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.y -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+			hasAttacked = true;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		velocity.y += 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "S";
+		if (attacking == false)
+		{
+			velocity.y += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "S";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.y += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+			hasAttacked = true;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x -= 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "W";
+		if (attacking == false)
+		{
+			velocity.x -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "W";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.x -= 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+			hasAttacked = true;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		velocity.x += 128;
-		this->moveCD = 0;
-		this->moved = true;
-		this->lastMove = "D";
+		if (attacking == false)
+		{
+			velocity.x += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			this->lastMove = "D";
+			this->hurtbox.setPosition(hitbox.getPosition());
+			this->hurtbox.updateHitboxDrawable();
+			hasAttacked = false;
+		}
+		else
+		{
+			animatedCharacter.playAnimation("Attack", "Idle");
+			velocityh.x += 128;
+			this->moveCD = 0;
+			this->moved = true;
+			attacking = false;
+			hasAttacked = true;
+
+			//Samma som caractären
+			this->hurtbox.setPosition(this->character.getPosition());
+			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
+			this->hurtbox.setSize(sf::Vector2f(128, 128));
+			//hurtbox move
+			//this->hurtbox.move(velocityh);
+			//this->hurtbox.setPosition(hurtbox.getPosition());
+			//this->hurtbox.updateHitboxDrawable();
+		}
 	}
 
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		animatedCharacter.playAnimation("Attack", "Idle");
-	}
+	
 
 
 	//Sätter karaktärens nya position
@@ -137,6 +267,11 @@ void Character::move(float sec)
 	this->hitbox.move(velocity);
 	this->hitbox.setPosition(hitbox.getPosition());
 	this->hitbox.updateHitboxDrawable();
+
+	//hitbox
+	this->hurtbox.move(velocity);
+	this->hurtbox.setPosition(hurtbox.getPosition());
+	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }
@@ -157,6 +292,7 @@ void Character::setPosition(int x, int y)
 
 void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
+	target.draw(this->hurtbox);
 	target.draw(this->hitbox);
 	target.draw(this->character);
 	target.draw(this->debugMidPoint);
@@ -174,9 +310,19 @@ sf::FloatRect Character::getBoundingBox()
 	return character.getGlobalBounds();
 }
 
+sf::FloatRect Character::getHitboxBoundingBox()
+{
+	return this->hurtbox.getBoundingBox();
+}
+
 Hitbox Character::getHitbox()
 {
 	return this->hitbox;
+}
+
+Hitbox Character::getHurtbox()
+{
+	return this->hurtbox;
 }
 
 bool Character::getMoved()
@@ -194,6 +340,11 @@ string Character::getLastMoved()
 	return this->lastMove;
 }
 
+bool Character::getHasAttacked()
+{
+	return this->hasAttacked;
+}
+
 void Character::setMoved(bool moved)
 {
 	this->moved = moved;
@@ -203,11 +354,22 @@ void Character::setMove(float x, float y)
 {
 	velocity = { x, y };
 	this->character.move(velocity);
+	this->animatedCharacter.move(velocity);
 
 	//hitbox
+
 	this->hitbox.move(velocity);
 	this->hitbox.setPosition(hitbox.getPosition());
 	this->hitbox.updateHitboxDrawable();
 
+	this->hurtbox.move(velocity);
+	this->hurtbox.setPosition(hurtbox.getPosition());
+	this->hurtbox.updateHitboxDrawable();
+
 	this->updateMiddlePoint();
+}
+
+void Character::setHasAttacked(bool state)
+{
+	this->hasAttacked = state;
 }
