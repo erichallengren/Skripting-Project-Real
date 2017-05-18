@@ -173,6 +173,10 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="character.lua" />
+    <None Include="monster.lua" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

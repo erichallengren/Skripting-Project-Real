@@ -12,7 +12,7 @@ int main()
 	{	/* error...*/	}
 
 	sf::Texture playerTexture;
-	if (!playerTexture.loadFromFile("../Sprites/StarPlatinum-sheet.png"))
+	if (!playerTexture.loadFromFile("../Sprites/Walter fuckup.png"))
 		throw "autistic schreecing";
 
 	Game* game = new Game(&texture, &playerTexture);

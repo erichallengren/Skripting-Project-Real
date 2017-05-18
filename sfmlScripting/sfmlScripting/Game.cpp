@@ -84,7 +84,7 @@ void Game::update(float sec, lua_State * L)
 	{
 		nextTo = true;
 	}
-	this->monster.update(this->character, nextTo);
+	this->monster.update(this->character, nextTo, L);
 	this->checkCollision();
 
 	scoreDisplay.setString("Score: " + std::to_string(score));

@@ -41,7 +41,7 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->animatedCharacter.setPosition({ 1024, 512 });
 
 	this->animatedCharacter.addAnimation("Idle", { 0, 8 });
-	this->animatedCharacter.addAnimation("Attack", {2, 4});
+	this->animatedCharacter.addAnimation("Attack", {9, 20});
 
 	this->animatedCharacter.setAnimation("Idle");
 

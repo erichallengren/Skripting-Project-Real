@@ -60,4 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="character.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="monster.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

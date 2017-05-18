@@ -67,16 +67,16 @@ Monster::~Monster()
 
 }
 
-void Monster::update(Character& character, bool nextTo)
+void Monster::update(Character& character, bool nextTo, lua_State * L)
 {
 	if (character.getMoved() == true)
 	{
-		this->move(character, nextTo);
+		this->move(character, nextTo, L);
 		character.setMoved(false);
 	}
 }
 
-void Monster::move(Character& character, bool nextTo)
+void Monster::move(Character& character, bool nextTo, lua_State * L)
 {
 	velocity = { 0, 0 };
 
@@ -84,8 +84,44 @@ void Monster::move(Character& character, bool nextTo)
 
 	int moveNumber = rand() % 1 + 1;
 
+	int error = luaL_dofile(L, "monster.lua");
+
+	lua_getglobal(L, "move");
+
+	lua_pushnumber(L, velocity.x);
+	lua_pushnumber(L, velocity.y);
+	lua_pushnumber(L, rayToCharacter.x);
+	lua_pushnumber(L, rayToCharacter.y);
+	lua_pushnumber(L, moveNumber);
+
+	error = lua_pcall(L, 5, 5, NULL);
+
+	moveNumber = lua_tonumber(L, -1); //får sista
+	rayToCharacter.y = lua_tonumber(L, -2);
+	rayToCharacter.x = lua_tonumber(L, -3);
+	velocity.y = lua_tonumber(L, -4);
+	velocity.x = lua_tonumber(L, -5);
+
+	lua_pop(L, 5);
+
+
+
+	//lua_pushnumber(L, velocity.y);
+	//lua_pushnumber(L, this->moveCD);
+	//lua_pushboolean(L, this->moved);
+	//lua_pushstring(L, this->lastMove.c_str());
+
+	//error = lua_pcall(L, 4, 4, NULL);
+
+	//this->lastMove = lua_tostring(L, -1); //får sista
+	//this->moved = lua_toboolean(L, -2);
+	//this->moveCD = lua_tonumber(L, -3);
+	//velocity.y = lua_tonumber(L, -4);
+
+	//lua_pop(L, 4); //tar bort alla fyra
+
 	
-	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
+	/*if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
 	{
 		if (rayToCharacter.y >= 0)
 		{
@@ -135,7 +171,7 @@ void Monster::move(Character& character, bool nextTo)
 				velocity.y -= 128;
 			}
 		}
-	}
+	}*/
 	if (nextTo == false)
 	{
 		//Sätter monstrets nya position

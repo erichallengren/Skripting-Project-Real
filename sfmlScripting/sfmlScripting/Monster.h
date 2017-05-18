@@ -22,8 +22,8 @@ public:
 	Monster(sf::Texture * texture, int x = 0, int y = 0);
 	~Monster(); 
 
-	void update(Character& character, bool nextTo);
-	void move(Character& character, bool nextTo);
+	void update(Character& character, bool nextTo, lua_State * L);
+	void move(Character& character, bool nextTo, lua_State * L);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
