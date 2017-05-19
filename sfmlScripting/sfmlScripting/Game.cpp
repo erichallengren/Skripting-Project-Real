@@ -56,7 +56,7 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 			mapTile = map.substr((i * 15) + j, 1);
 			
 			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
-			if (mapTile == "1")
+			if (mapTile == "8")
 			{
 				this->walls[(i * 15) + j] = list[(i * 15) + j];
 			}
@@ -72,11 +72,12 @@ Game::~Game()
 
 void Game::update(float sec, lua_State * L)
 {
-	this->checkCollision(); //collision med väggen
+
 
 	scoreDisplay.setString("Score: " + std::to_string(score));
 
 	this->character.update(sec, L);
+	this->checkCollision(); //collision med väggen
 	this->monster.update(this->character, this->nextTo, L, this->score);
 }
 
@@ -122,7 +123,7 @@ void Game::checkCollision()
 	//Collosion med väggar
 	for (int i = 0; i < 120; i++)
 	{
-		if (this->walls[i] != nullptr)
+		if (this->walls[i] != nullptr && i != 0 && i != 14 && i != 105 && i != 119 )
 		{
 			if (this->character.getBoundingBox().intersects(this->walls[i]->getBoundingBox()))
 			{
@@ -134,7 +135,7 @@ void Game::checkCollision()
 				{
 					character.setMove(0, -128);
 				}
-				else if (character.getLastMoved() == "W")
+				else if (character.getLastMoved() == "A")
 				{
 					character.setMove(128, 0);
 				}
@@ -144,5 +145,22 @@ void Game::checkCollision()
 				}
 			}
 		}
+		if (this->character.getBoundingBox().intersects(this->walls[0]->getBoundingBox()))
+		{
+			character.setMove(128, 128);
+		}
+		if (this->character.getBoundingBox().intersects(this->walls[14]->getBoundingBox()))
+		{
+			character.setMove(-128, 128);
+		}
+		if (this->character.getBoundingBox().intersects(this->walls[105]->getBoundingBox()))
+		{
+			character.setMove(128, -128);
+		}
+		if (this->character.getBoundingBox().intersects(this->walls[119]->getBoundingBox()))
+		{
+			character.setMove(-128, -128);
+		}
+
 	}
 }

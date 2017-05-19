@@ -4,7 +4,7 @@ Character::Character()
 {
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
-	this->character.setPosition(1024, 512);
+	this->character.setPosition(128, 512);
 	this->character.setFillColor(sf::Color::Green);
 
 	//middlepoint
@@ -38,16 +38,16 @@ Character::Character(sf::Texture * texture, int x, int y)
 	//:character()
 {
 	this->animatedCharacter = AnimatedSprite(*texture, sf::Vector2i(32.f, 32.f), 0.15f);
-	this->animatedCharacter.setPosition({ 1024, 512 });
+	this->animatedCharacter.setPosition({ 128, 512 });
 
 	this->animatedCharacter.addAnimation("Idle", { 0, 8 });
-	this->animatedCharacter.addAnimation("Attack", {2, 4});
+	this->animatedCharacter.addAnimation("Attack", {9, 21});
 
 	this->animatedCharacter.setAnimation("Idle");
 
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
-	this->character.setPosition(1024, 512);
+	this->character.setPosition(128, 512);
 	//this->character.setFillColor(sf::Color::Green);
 
 	//middlepoint
@@ -92,7 +92,7 @@ void Character::update(float sec, lua_State * L)
 {
 	this->animatedCharacter.update(sec);
 	this->moveCD += sec;
-	if (this->moveCD >= 1)
+	if (this->moveCD >= 0.5)
 	{
 		this->move(sec, L);
 	}
@@ -174,64 +174,30 @@ void Character::move(float sec, lua_State * L)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		attacking = true;
+		this->luaAttack(L, 0, true, false, true);
+
+		animatedCharacter.playAnimation("Attack", "Idle");
 	}
 
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		if(attacking == false)
-		{
-			this->luaMove(L, 0, -128, 0, true, "N", false);
-		}
-		else
-		{
-			this->luaAttack(L, 0, true, false, true);
-
-			animatedCharacter.playAnimation("Attack", "Idle");
-		}
+		this->luaMove(L, 0, -128, 0, true, "N", false);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		if (attacking == false)
-		{
-			this->luaMove(L, 0, 128, 0, true, "S", false);
-		}
-		else
-		{
-			this->luaAttack(L, 0, true, false, true);
-
-			animatedCharacter.playAnimation("Attack", "Idle");
-		}
+		this->luaMove(L, 0, 128, 0, true, "S", false);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		if (attacking == false)
-		{
-			this->luaMove(L, -128, 0, 0, true, "A", false);
-		}
-		else
-		{
-			this->luaAttack(L, 0, true, false, true);
-
-			animatedCharacter.playAnimation("Attack", "Idle");
-		}
+		this->luaMove(L, -128, 0, 0, true, "A", false);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		if (attacking == false)
-		{
-			this->luaMove(L, 128, 0, 0, true, "D", false);
-		}
-		else
-		{
-			this->luaAttack(L, 0, true, false, true);
-
-			animatedCharacter.playAnimation("Attack", "Idle");
-		}
+		this->luaMove(L, 128, 0, 0, true, "D", false);
 	}
 
 
@@ -271,10 +237,10 @@ void Character::setPosition(int x, int y)
 
 void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
-	target.draw(this->hurtbox);
-	target.draw(this->hitbox);
-	target.draw(this->character);
-	target.draw(this->debugMidPoint);
+	//target.draw(this->hurtbox);
+	//target.draw(this->hitbox);
+	//target.draw(this->character);
+	//target.draw(this->debugMidPoint);
 	target.draw(this->animatedCharacter);
 }
 

@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
-
+#include <SFML/Audio.hpp>
 
 int main()
 {	
@@ -8,14 +8,20 @@ int main()
 	luaL_openlibs(L);
 
 	sf::Texture texture;
-	if (!texture.loadFromFile("../Sprites/SpriteSheet.png"))
+	if (!texture.loadFromFile("../Sprites/SpriteShetah.png"))
 	{	/* error...*/	}
 
 	sf::Texture playerTexture;
-	if (!playerTexture.loadFromFile("../Sprites/Walter fuckup.png"))
+	if (!playerTexture.loadFromFile("../Sprites/StarPlatinumAllSheet.png"))
 		throw "autistic schreecing";
 
 	Game* game = new Game(&texture, &playerTexture);
+
+	sf::Music battleMusic;
+	battleMusic.openFromFile("mus_dance_of_dog.ogg");
+	battleMusic.setLoop(true);
+	battleMusic.play();
+
 
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
 

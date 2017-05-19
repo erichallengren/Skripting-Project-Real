@@ -4,7 +4,7 @@ Monster::Monster()
 {
 	this->monsterSize = { 128, 128 };
 	this->monster = sf::RectangleShape(monsterSize);
-	this->monster.setPosition(128, 512);
+	this->monster.setPosition(1024, 512);
 	this->monster.setFillColor(sf::Color::Black);
 	this->hasAttacked = false;
 	
@@ -37,7 +37,7 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 {
 	this->monsterSize = { 128, 128 };
 	this->monster = sf::RectangleShape(monsterSize);
-	this->monster.setPosition(128, 512);
+	this->monster.setPosition(1024, 512);
 	//this->monster.setFillColor(sf::Color::Black);
 	this->hasAttacked = false;
 
@@ -62,7 +62,7 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 	//new shit
 	//this->monster.setPosition(x, y);
 	this->monster.setTexture(texture);
-	this->monster.setTextureRect(sf::IntRect(6*32, 0, 32, 32));
+	this->monster.setTextureRect(sf::IntRect(22*32, 0, 32, 32));
 
 	//venne
 	this->nextTo = false;
@@ -287,10 +287,10 @@ void checkIfCanAttack()
 
 void Monster::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
-	target.draw(this->hurtbox);
-	target.draw(this->hitbox);
+	//target.draw(this->hurtbox);
+	//target.draw(this->hitbox);
 	target.draw(this->monster);
-	target.draw(this->debugMidPoint);
+	//target.draw(this->debugMidPoint);
 }
 
 void Monster::updateMiddlePoint()
