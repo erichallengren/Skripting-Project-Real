@@ -18,9 +18,6 @@ private:
 	sf::Font font;
 	sf::Text scoreDisplay;
 
-	//venne
-	bool nextTo;
-
 public:
 	Game();
 	Game(sf::Texture * texture, sf::Texture * playerTexture);

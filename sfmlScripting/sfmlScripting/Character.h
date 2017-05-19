@@ -30,6 +30,12 @@ public:
 	~Character();
 
 	void update(float sec, lua_State * L);
+	void luaMove(lua_State* L, int velocityXChange, int velocityYChange, float moveCDChange,
+				 bool movedChange, string lastMoveChange, bool hasAttackedChange);
+
+	void luaAttack(lua_State* L, int moveCDChange, bool movedChange, 
+				   bool attackingChange, bool hasAttackedChange);
+
 	void move(float sec, lua_State * L);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();

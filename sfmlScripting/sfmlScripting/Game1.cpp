@@ -5,7 +5,6 @@ Game::Game()
 	amountOfWalls = 0;
 	this->character = Character();
 	this->monster = Monster();
-	this->nextTo = false;
 }
 
 Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
@@ -72,12 +71,24 @@ Game::~Game()
 
 void Game::update(float sec, lua_State * L)
 {
-	this->checkCollision(); //collision med väggen
+	bool moved = false;
+	bool nextTo = false;
+	sf::Vector2f distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if(distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128 )
+	{
+		nextTo = true;
+	}
+	this->character.update(sec, L);
+	distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
+	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
+	{
+		nextTo = true;
+	}
+	this->monster.update(this->character, nextTo, L);
+	this->checkCollision();
 
 	scoreDisplay.setString("Score: " + std::to_string(score));
-
-	this->character.update(sec, L);
-	this->monster.update(this->character, this->nextTo, L, this->score);
+	nextTo = false;
 }
 
 void Game::draw(sf::RenderWindow& window)
@@ -103,23 +114,70 @@ void Game::draw(sf::RenderWindow& window)
 
 void Game::checkCollision()
 {
-	/*this->nextTo = false;
-
-	sf::Vector2f distance = (this->character.getMiddlePoint() - this->monster.getMiddlePoint());
-
+	bool nextTo = false;
+	sf::Vector2f distance = this->character.getMiddlePoint() - this->monster.getMiddlePoint();
 	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
 	{
 		nextTo = true;
-		score++;
 	}
-
-	if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
+	else if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
 	{
 		nextTo = true;
+	}
+	bool caracterAtt = this->character.getHasAttacked();
+	bool monsterAtt = this->monster.getHasAttacked();
+	if (caracterAtt && !monsterAtt)
+	{
 		score++;
-	}*/
+		this->character.setHasAttacked(false);
+	}
+	else if (!caracterAtt && monsterAtt)
+	{
+		score--;
+		this->monster.setHasAttacked(false);
+	}
 
-	//Collosion med väggar
+	//if (this->character.getBoundingBox().intersects(this->monster.getBoundingBox())/* || this->character.getBoundingBox().intersects(this->monster.getHurtboxBoundingBox())*/)
+	//{
+	//	if (character.getLastMoved() == "N")
+	//	{
+	//		character.setMove(0, 128);
+	//	}
+	//	else if (character.getLastMoved() == "S")
+	//	{
+	//		character.setMove(0, -128);
+	//	}
+	//	else if (character.getLastMoved() == "W")
+	//	{
+	//		character.setMove(128, 0);
+	//	}
+	//	else
+	//	{
+	//		character.setMove(-128, 0);
+	//	}
+	//	this->score--;
+	//}
+	//if (this->monster.getBoundingBox().intersects(this->character.getHitboxBoundingBox()))
+	//{
+	//	if (character.getLastMoved() == "N")
+	//	{
+	//		monster.setMove(0, -128);
+	//	}
+	//	else if (character.getLastMoved() == "S")
+	//	{
+	//		monster.setMove(0, 128);
+	//	}
+	//	else if (character.getLastMoved() == "W")
+	//	{
+	//		monster.setMove(-128, 0);
+	//	}
+	//	else
+	//	{
+	//		monster.setMove(128, 0);
+	//	}
+	//	this->score++;
+	//}
+
 	for (int i = 0; i < 120; i++)
 	{
 		if (this->walls[i] != nullptr)
@@ -145,4 +203,10 @@ void Game::checkCollision()
 			}
 		}
 	}
+
+	//if (this->character.getHitbox().intersect(this->monster.getHitbox()))
+	//{
+	////	this->character
+	//	//this->character.getCharacter().setFillColor(sf::Color::Black);
+	//}
 }

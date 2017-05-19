@@ -26,6 +26,10 @@ Monster::Monster()
 	//debug
 	this->debugMidPoint.setRadius(10);
 	this->debugMidPoint.setFillColor(sf::Color::Red);
+
+	//venne
+	this->nextTo = false;
+	this->inside = false;
 }
 
 Monster::Monster(sf::Texture * texture, int x, int y)
@@ -60,6 +64,9 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 	this->monster.setTexture(texture);
 	this->monster.setTextureRect(sf::IntRect(6*32, 0, 32, 32));
 
+	//venne
+	this->nextTo = false;
+	this->inside = false;
 }
 
 Monster::~Monster()
@@ -67,11 +74,12 @@ Monster::~Monster()
 
 }
 
-void Monster::update(Character& character, bool nextTo, lua_State * L)
+void Monster::update(Character& character, bool nextTo, lua_State * L, int & score)
 {
 	if (character.getMoved() == true)
 	{
 		this->move(character, nextTo, L);
+		this->checkSides(character, score);
 		character.setMoved(false);
 	}
 }
@@ -82,54 +90,61 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 
 	sf::Vector2f rayToCharacter = character.getMiddlePoint() - this->middlePoint;
 
-	int moveNumber = rand() % 1 + 1;
+	float rayx, rayy;
 
-	int error = luaL_dofile(L, "monster.lua");
+	int moveNumber = rand() % 2 + 1;
 
-	lua_getglobal(L, "move");
+	int error = luaL_dofile(L, "character.lua");
 
-	lua_pushnumber(L, velocity.x);
-	lua_pushnumber(L, velocity.y);
-	lua_pushnumber(L, rayToCharacter.x);
-	lua_pushnumber(L, rayToCharacter.y);
-	lua_pushnumber(L, moveNumber);
+	//lua_getglobal(L, "moveOld");
 
-	error = lua_pcall(L, 5, 5, NULL);
-
-	moveNumber = lua_tonumber(L, -1); //får sista
-	rayToCharacter.y = lua_tonumber(L, -2);
-	rayToCharacter.x = lua_tonumber(L, -3);
-	velocity.y = lua_tonumber(L, -4);
-	velocity.x = lua_tonumber(L, -5);
-
-	lua_pop(L, 5);
-
-
-
+	//lua_pushnumber(L, velocity.x);
 	//lua_pushnumber(L, velocity.y);
-	//lua_pushnumber(L, this->moveCD);
-	//lua_pushboolean(L, this->moved);
-	//lua_pushstring(L, this->lastMove.c_str());
+	//lua_pushnumber(L, rayToCharacter.x);
+	//lua_pushnumber(L, rayToCharacter.y);
+	//lua_pushnumber(L, moveNumber);
 
-	//error = lua_pcall(L, 4, 4, NULL);
+	//error = lua_pcall(L, 5, 5, NULL);
 
-	//this->lastMove = lua_tostring(L, -1); //får sista
-	//this->moved = lua_toboolean(L, -2);
-	//this->moveCD = lua_tonumber(L, -3);
+	//moveNumber = lua_tonumber(L, -1); //får sista
+	//rayx = lua_tonumber(L, -2);
+	//rayy = lua_tonumber(L, -3);
+	//rayToCharacter.y = rayx;
+	//rayToCharacter.x = rayy;
 	//velocity.y = lua_tonumber(L, -4);
+	//velocity.x = lua_tonumber(L, -5);
 
-	//lua_pop(L, 4); //tar bort alla fyra
+	//lua_pop(L, 5);
+
 
 	
-	/*if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
+	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
 	{
 		if (rayToCharacter.y >= 0)
 		{
-			velocity.y += 128;
+			lua_getglobal(L, "moveY");
+
+			lua_pushnumber(L, velocity.y);
+			lua_pushnumber(L, 128);
+			
+			error = lua_pcall(L, 2, 1, NULL);
+			
+			velocity.y = lua_tonumber(L, -1);
+
+			lua_pop(L, 1);
 		}
 		else
 		{
-			velocity.y -= 128;
+			lua_getglobal(L, "moveY");
+
+			lua_pushnumber(L, velocity.y);
+			lua_pushnumber(L, -128);
+
+			error = lua_pcall(L, 2, 1, NULL);
+
+			velocity.y = lua_tonumber(L, -1);
+
+			lua_pop(L, 1);
 		}
 	}
 	
@@ -137,11 +152,29 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 	{
 		if (rayToCharacter.x >= 0)
 		{
-			velocity.x += 128;
+			lua_getglobal(L, "moveX");
+
+			lua_pushnumber(L, velocity.x);
+			lua_pushnumber(L, 128);
+
+			error = lua_pcall(L, 2, 1, NULL);
+
+			velocity.x = lua_tonumber(L, -1);
+
+			lua_pop(L, 1);
 		}
 		else
 		{
-			velocity.x -= 128;
+			lua_getglobal(L, "moveX");
+
+			lua_pushnumber(L, velocity.x);
+			lua_pushnumber(L, -128);
+
+			error = lua_pcall(L, 2, 1, NULL);
+
+			velocity.x = lua_tonumber(L, -1);
+
+			lua_pop(L, 1);
 		}
 	}
 
@@ -153,25 +186,61 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 		{
 			if (rayToCharacter.x >= 0)
 			{
-				velocity.x += 128;
+				lua_getglobal(L, "moveX");
+
+				lua_pushnumber(L, velocity.x);
+				lua_pushnumber(L, 128);
+
+				error = lua_pcall(L, 2, 1, NULL);
+
+				velocity.x = lua_tonumber(L, -1);
+
+				lua_pop(L, 1);
 			}
 			else
 			{
-				velocity.x -= 128;
+				lua_getglobal(L, "moveX");
+
+				lua_pushnumber(L, velocity.x);
+				lua_pushnumber(L, -128);
+
+				error = lua_pcall(L, 2, 1, NULL);
+
+				velocity.x = lua_tonumber(L, -1);
+
+				lua_pop(L, 1);
 			}
 		}
 		else if (randRow == 2)
 		{
 			if (rayToCharacter.y >= 0)
 			{
-				velocity.y += 128;
+				lua_getglobal(L, "moveY");
+
+				lua_pushnumber(L, velocity.y);
+				lua_pushnumber(L, 128);
+
+				error = lua_pcall(L, 2, 1, NULL);
+
+				velocity.y = lua_tonumber(L, -1);
+
+				lua_pop(L, 1);
 			}
 			else
 			{
-				velocity.y -= 128;
+				lua_getglobal(L, "moveY");
+
+				lua_pushnumber(L, velocity.y);
+				lua_pushnumber(L, -128);
+
+				error = lua_pcall(L, 2, 1, NULL);
+
+				velocity.y = lua_tonumber(L, -1);
+
+				lua_pop(L, 1);
 			}
 		}
-	}*/
+	}
 	if (nextTo == false)
 	{
 		//Sätter monstrets nya position
@@ -291,5 +360,43 @@ void Monster::setMove(float x, float y)
 void Monster::setHasAttacked(bool state)
 {
 	this->hasAttacked = state;
+}
+
+void Monster::checkSides(Character & character, int & score)
+{
+	this->nextTo = false;
+	this->inside = false;
+
+	sf::Vector2f distance = (character.getMiddlePoint() - this->middlePoint);
+
+	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
+	{
+		nextTo = true;
+		//score++;
+	}
+
+	if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
+	{
+		nextTo = true;
+		//score++;
+	}
+
+	if (distance.x == 0 && distance.y == 0)
+	{
+		this->inside = true;
+	}
+
+	if (nextTo == true)
+	{
+		if (character.getHasAttacked() == true)
+		{
+			score++;
+		}
+	}
+
+	if (this->inside == true)
+	{
+		score--;
+	}
 }
 

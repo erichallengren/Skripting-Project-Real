@@ -41,7 +41,7 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->animatedCharacter.setPosition({ 1024, 512 });
 
 	this->animatedCharacter.addAnimation("Idle", { 0, 8 });
-	this->animatedCharacter.addAnimation("Attack", {9, 20});
+	this->animatedCharacter.addAnimation("Attack", {2, 4});
 
 	this->animatedCharacter.setAnimation("Idle");
 
@@ -98,28 +98,79 @@ void Character::update(float sec, lua_State * L)
 	}
 }
 
+void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, float moveCDChange, 
+						bool movedChange, string lastMoveChange, bool hasAttackedChange)
+{
+	int error = luaL_dofile(L, "character.lua");
+
+	lua_getglobal(L, "move");
+
+	//de som ska ändras
+	lua_pushnumber(L, velocity.x);
+	lua_pushnumber(L, velocity.y);
+	lua_pushnumber(L, this->moveCD);
+	lua_pushboolean(L, this->moved);
+	lua_pushstring(L, this->lastMove.c_str());
+	lua_pushboolean(L, this->hasAttacked);
+
+	//det som ska ändras med
+	lua_pushnumber(L, velocityXChange);
+	lua_pushnumber(L, velocityYChange);
+	lua_pushnumber(L, moveCDChange);
+	lua_pushboolean(L, movedChange);
+	lua_pushstring(L, lastMoveChange.c_str());
+	lua_pushboolean(L, hasAttackedChange);
+
+	//ta tillbaka svar
+	error = lua_pcall(L, 12, 6, NULL); //L, in, ut, NULL
+
+	//sätt dem i c++
+	this->hasAttacked = lua_toboolean(L, -1); //får sista
+	this->lastMove = lua_tostring(L, -2);
+	this->moved = lua_toboolean(L, -3);
+	this->moveCD = lua_tonumber(L, -4);
+	velocity.y = lua_tonumber(L, -5);
+	velocity.x = lua_tonumber(L, -6);
+
+	//ta bort alla
+	lua_pop(L, 6);
+}
+
+void Character::luaAttack(lua_State* L, int moveCDChange, bool movedChange, bool attackingChange,
+						  bool hasAttackedChange)
+{
+	int error = luaL_dofile(L, "character.lua");
+
+	lua_getglobal(L, "attack");
+
+	//de som ska ändras
+	lua_pushnumber(L, this->moveCD);
+	lua_pushboolean(L, this->moved);
+	lua_pushboolean(L, this->attacking);
+	lua_pushboolean(L, this->hasAttacked);
+
+	//det som ska ändras med
+	lua_pushnumber(L, moveCDChange);
+	lua_pushboolean(L, movedChange);
+	lua_pushboolean(L, attackingChange);
+	lua_pushboolean(L, hasAttackedChange);
+
+	//ta tillbaka svar
+	error = lua_pcall(L, 8, 4, NULL);
+
+	//sätt dem i c++
+	this->hasAttacked = lua_toboolean(L, -1);
+	this->attacking = lua_toboolean(L, -2);
+	this->moved = lua_toboolean(L, -3);
+	this->moveCD = lua_tonumber(L, -4);
+
+	//ta bort alla
+	lua_pop(L, 4);
+}
+
 void Character::move(float sec, lua_State * L)
 {
-	//int error = luaL_dofile(L, "character.lua");
-
-	//lua_getglobal(L, "modVelocityN");
-
-	//lua_pushnumber(L, velocity.y);
-	//lua_pushnumber(L, this->moveCD);
-	//lua_pushboolean(L, this->moved);
-	//lua_pushstring(L, this->lastMove.c_str());
-
-	//error = lua_pcall(L, 4, 4, NULL);
-
-	//this->lastMove = lua_tostring(L, -1); //får sista
-	//this->moved = lua_toboolean(L, -2);
-	//this->moveCD = lua_tonumber(L, -3);
-	//velocity.y = lua_tonumber(L, -4);
-
-	//lua_pop(L, 4); //tar bort alla fyra
-
 	velocity = { 0, 0 };
-	velocityh = { 0, 0 };
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
@@ -131,31 +182,13 @@ void Character::move(float sec, lua_State * L)
 	{
 		if(attacking == false)
 		{
-			velocity.y -= 128;
-			this->moveCD = 0;
-			this->moved = true;
-			this->lastMove = "N";
-			this->hurtbox.setPosition(hitbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
-			hasAttacked = false;
+			this->luaMove(L, 0, -128, 0, true, "N", false);
 		}
 		else
 		{
-			animatedCharacter.playAnimation("Attack", "Idle");
-			velocityh.y -= 128;
-			this->moveCD = 0;
-			this->moved = true;
-			attacking = false;
-			hasAttacked = true;
+			this->luaAttack(L, 0, true, false, true);
 
-			//Samma som caractären
-			this->hurtbox.setPosition(this->character.getPosition());
-			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-			this->hurtbox.setSize(sf::Vector2f(128, 128));
-			//hurtbox move
-			//this->hurtbox.move(velocityh);
-			//this->hurtbox.setPosition(hurtbox.getPosition());
-			//this->hurtbox.updateHitboxDrawable();
+			animatedCharacter.playAnimation("Attack", "Idle");
 		}
 	}
 
@@ -163,31 +196,13 @@ void Character::move(float sec, lua_State * L)
 	{
 		if (attacking == false)
 		{
-			velocity.y += 128;
-			this->moveCD = 0;
-			this->moved = true;
-			this->lastMove = "S";
-			this->hurtbox.setPosition(hitbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
-			hasAttacked = false;
+			this->luaMove(L, 0, 128, 0, true, "S", false);
 		}
 		else
 		{
-			animatedCharacter.playAnimation("Attack", "Idle");
-			velocityh.y += 128;
-			this->moveCD = 0;
-			this->moved = true;
-			attacking = false;
-			hasAttacked = true;
+			this->luaAttack(L, 0, true, false, true);
 
-			//Samma som caractären
-			this->hurtbox.setPosition(this->character.getPosition());
-			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-			this->hurtbox.setSize(sf::Vector2f(128, 128));
-			//hurtbox move
-			//this->hurtbox.move(velocityh);
-			//this->hurtbox.setPosition(hurtbox.getPosition());
-			//this->hurtbox.updateHitboxDrawable();
+			animatedCharacter.playAnimation("Attack", "Idle");
 		}
 	}
 
@@ -195,31 +210,13 @@ void Character::move(float sec, lua_State * L)
 	{
 		if (attacking == false)
 		{
-			velocity.x -= 128;
-			this->moveCD = 0;
-			this->moved = true;
-			this->lastMove = "W";
-			this->hurtbox.setPosition(hitbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
-			hasAttacked = false;
+			this->luaMove(L, -128, 0, 0, true, "A", false);
 		}
 		else
 		{
-			animatedCharacter.playAnimation("Attack", "Idle");
-			velocityh.x -= 128;
-			this->moveCD = 0;
-			this->moved = true;
-			attacking = false;
-			hasAttacked = true;
+			this->luaAttack(L, 0, true, false, true);
 
-			//Samma som caractären
-			this->hurtbox.setPosition(this->character.getPosition());
-			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-			this->hurtbox.setSize(sf::Vector2f(128, 128));
-			//hurtbox move
-			//this->hurtbox.move(velocityh);
-			//this->hurtbox.setPosition(hurtbox.getPosition());
-			//this->hurtbox.updateHitboxDrawable();
+			animatedCharacter.playAnimation("Attack", "Idle");
 		}
 	}
 
@@ -227,31 +224,13 @@ void Character::move(float sec, lua_State * L)
 	{
 		if (attacking == false)
 		{
-			velocity.x += 128;
-			this->moveCD = 0;
-			this->moved = true;
-			this->lastMove = "D";
-			this->hurtbox.setPosition(hitbox.getPosition());
-			this->hurtbox.updateHitboxDrawable();
-			hasAttacked = false;
+			this->luaMove(L, 128, 0, 0, true, "D", false);
 		}
 		else
 		{
-			animatedCharacter.playAnimation("Attack", "Idle");
-			velocityh.x += 128;
-			this->moveCD = 0;
-			this->moved = true;
-			attacking = false;
-			hasAttacked = true;
+			this->luaAttack(L, 0, true, false, true);
 
-			//Samma som caractären
-			this->hurtbox.setPosition(this->character.getPosition());
-			this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-			this->hurtbox.setSize(sf::Vector2f(128, 128));
-			//hurtbox move
-			//this->hurtbox.move(velocityh);
-			//this->hurtbox.setPosition(hurtbox.getPosition());
-			//this->hurtbox.updateHitboxDrawable();
+			animatedCharacter.playAnimation("Attack", "Idle");
 		}
 	}
 

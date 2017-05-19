@@ -17,12 +17,16 @@ private:
 	Hitbox hitbox;
 	Hitbox hurtbox;
 	bool hasAttacked;
+
+	//venne
+	bool nextTo;
+	bool inside;
 public:
 	Monster();
 	Monster(sf::Texture * texture, int x = 0, int y = 0);
 	~Monster(); 
 
-	void update(Character& character, bool nextTo, lua_State * L);
+	void update(Character& character, bool nextTo, lua_State * L, int & score);
 	void move(Character& character, bool nextTo, lua_State * L);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
@@ -39,6 +43,8 @@ public:
 
 	void setMove(float x, float y);
 	void setHasAttacked(bool state);
+
+	void checkSides(Character& character, int & score);
 
 	//bool monsterCollision(const Character &other);
 };
