@@ -17,18 +17,22 @@ private:
 	int score;
 	sf::Font font;
 	sf::Text scoreDisplay;
+	string map;
+	string mapTile;
 
 	//venne
 	bool nextTo;
-
 public:
 	Game();
 	Game(sf::Texture * texture, sf::Texture * playerTexture);
 	~Game();
 
+	void setupMap(sf::Texture * texture);
 	void update(float sec, lua_State * L);
 	void draw(sf::RenderWindow& window);
 	void checkCollision();
+	string getMap();
+	void setMap(string m);
 };
 
 #endif // !

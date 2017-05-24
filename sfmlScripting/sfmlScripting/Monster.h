@@ -12,18 +12,16 @@ private:
 	sf::Vector2f monsterSize;
 	sf::Vector2f middlePoint;
 	sf::Vector2f velocity;
-	sf::CircleShape debugMidPoint;
 
-	Hitbox hitbox;
-	Hitbox hurtbox;
 	bool hasAttacked;
 
-	//venne
+	//attack logick
 	bool nextTo;
 	bool inside;
+
 public:
 	Monster();
-	Monster(sf::Texture * texture, int x = 0, int y = 0);
+	Monster(sf::Texture * texture);
 	~Monster(); 
 
 	void update(Character& character, bool nextTo, lua_State * L, int & score);

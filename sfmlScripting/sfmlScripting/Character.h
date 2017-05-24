@@ -13,7 +13,6 @@ private:
 	sf::Vector2f middlePoint;
 	sf::Vector2f velocity;
 	sf::Vector2f velocityh;
-	sf::CircleShape debugMidPoint;
 
 	int tileSize;
 	float moveCD;
@@ -22,11 +21,9 @@ private:
 	bool attacking;
 	bool hasAttacked;
 
-	Hitbox hitbox;
-	Hitbox hurtbox;
 public:
 	Character();
-	Character(sf::Texture * texture, int x = 0, int y = 0);
+	Character(sf::Texture * texture);
 	~Character();
 
 	void update(float sec, lua_State * L);
@@ -42,9 +39,6 @@ public:
 
 	sf::CircleShape getCharacter();
 	sf::FloatRect getBoundingBox();
-	sf::FloatRect getHitboxBoundingBox();
-	Hitbox getHitbox();
-	Hitbox getHurtbox();
 	bool getMoved();
 	sf::Vector2f getMiddlePoint();
 	string getLastMoved();

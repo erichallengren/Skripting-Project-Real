@@ -2,39 +2,9 @@
 
 Character::Character()
 {
-	this->characterSize = 64.f;
-	this->character = sf::CircleShape(this->characterSize);
-	this->character.setPosition(128, 512);
-	this->character.setFillColor(sf::Color::Green);
-
-	//middlepoint
-	this->middlePoint = this->character.getPosition();
-	this->middlePoint.x += this->characterSize;
-	this->middlePoint.y += this->characterSize;
-
-	this->tileSize = 128; //4 ggr 32
-	this->moveCD = 1;
-	this->moved = false;
-	this->lastMove = "W";
-	this->attacking = false;
-	this->hasAttacked = false;
-
-	//hitbox
-	// character
-	this->hitbox.setPosition(this->character.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->character.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
 }
 
-Character::Character(sf::Texture * texture, int x, int y) 
+Character::Character(sf::Texture * texture) 
 	//:character()
 {
 	this->animatedCharacter = AnimatedSprite(*texture, sf::Vector2i(32.f, 32.f), 0.15f);
@@ -48,7 +18,6 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
 	this->character.setPosition(128, 512);
-	//this->character.setFillColor(sf::Color::Green);
 
 	//middlepoint
 	this->middlePoint = this->character.getPosition();
@@ -61,26 +30,6 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->lastMove = "W";
 	this->attacking = false;
 	this->hasAttacked = false;
-
-	//hitbox
-	// character
-	this->hitbox.setPosition(this->character.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->character.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
-
-	//new shit
-	//this->character.setPosition(x, y);
-	this->character.setTexture(texture);
-	this->character.setTextureRect(sf::IntRect(32*5, 0, 32, 32));
-
 }
 
 Character::~Character()
@@ -208,16 +157,6 @@ void Character::move(float sec, lua_State * L)
 	this->character.move(velocity);
 	this->animatedCharacter.move(velocity);
 
-	//hitbox
-	this->hitbox.move(velocity);
-	this->hitbox.setPosition(hitbox.getPosition());
-	this->hitbox.updateHitboxDrawable();
-
-	//hitbox
-	this->hurtbox.move(velocity);
-	this->hurtbox.setPosition(hurtbox.getPosition());
-	this->hurtbox.updateHitboxDrawable();
-
 	this->updateMiddlePoint();
 }
 
@@ -226,8 +165,6 @@ void Character::updateMiddlePoint()
 	this->middlePoint = this->character.getPosition();
 	this->middlePoint.x += this->characterSize;
 	this->middlePoint.y += this->characterSize;
-
-	this->debugMidPoint.setPosition(this->middlePoint - sf::Vector2f(this->debugMidPoint.getRadius(), this->debugMidPoint.getRadius()));
 }
 
 void Character::setPosition(int x, int y)
@@ -253,21 +190,6 @@ sf::CircleShape Character::getCharacter()
 sf::FloatRect Character::getBoundingBox()
 {
 	return character.getGlobalBounds();
-}
-
-sf::FloatRect Character::getHitboxBoundingBox()
-{
-	return this->hurtbox.getBoundingBox();
-}
-
-Hitbox Character::getHitbox()
-{
-	return this->hitbox;
-}
-
-Hitbox Character::getHurtbox()
-{
-	return this->hurtbox;
 }
 
 bool Character::getMoved()
@@ -300,16 +222,6 @@ void Character::setMove(float x, float y)
 	velocity = { x, y };
 	this->character.move(velocity);
 	this->animatedCharacter.move(velocity);
-
-	//hitbox
-
-	this->hitbox.move(velocity);
-	this->hitbox.setPosition(hitbox.getPosition());
-	this->hitbox.updateHitboxDrawable();
-
-	this->hurtbox.move(velocity);
-	this->hurtbox.setPosition(hurtbox.getPosition());
-	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }

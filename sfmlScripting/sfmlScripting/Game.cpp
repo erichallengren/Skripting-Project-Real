@@ -2,18 +2,15 @@
 
 Game::Game()
 {
-	amountOfWalls = 0;
-	this->character = Character();
-	this->monster = Monster();
-	this->nextTo = false;
 }
 
 Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 {
 	score = 0;
+
 	//120 lång, en för varje tile på banan	
-	string map = "";
-	string mapTile = "";
+	map = "";
+	mapTile = "";
 	ifstream myfile("../Maps/map1.txt");
 
 	if (!font.loadFromFile("arial.ttf"))
@@ -22,13 +19,13 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 	}
 	scoreDisplay.setFont(font);
 	scoreDisplay.setString("Score: " + std::to_string(score));
-	scoreDisplay.setCharacterSize(24);
-	scoreDisplay.setFillColor(sf::Color::Red);
+	scoreDisplay.setCharacterSize(36);
+	scoreDisplay.setFillColor(sf::Color::White);
 
 
 	amountOfWalls = 0;
-	this->character = Character(playerTexture, 2, 2);
-	this->monster = Monster(texture, 6, 6);
+	this->character = Character(playerTexture);
+	this->monster = Monster(texture);
 	
 
 	if (myfile.is_open())
@@ -39,10 +36,16 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 		}
 		myfile.close();
 	}
-	else cout << "Unable to open file";
+	else cout << "Unable to open file";	
+}
 
+Game::~Game()
+{
 
+}
 
+void Game::setupMap(sf::Texture * texture)
+{
 	for (int i = 0; i < 120; i++)
 	{
 		this->walls[i] = nullptr;
@@ -54,7 +57,7 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 		for (int j = 0; j < 15; j++)
 		{
 			mapTile = map.substr((i * 15) + j, 1);
-			
+
 			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
 			if (mapTile == "8")
 			{
@@ -62,12 +65,6 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 			}
 		}
 	}
-	
-}
-
-Game::~Game()
-{
-
 }
 
 void Game::update(float sec, lua_State * L)
@@ -104,22 +101,6 @@ void Game::draw(sf::RenderWindow& window)
 
 void Game::checkCollision()
 {
-	/*this->nextTo = false;
-
-	sf::Vector2f distance = (this->character.getMiddlePoint() - this->monster.getMiddlePoint());
-
-	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
-	{
-		nextTo = true;
-		score++;
-	}
-
-	if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
-	{
-		nextTo = true;
-		score++;
-	}*/
-
 	//Collosion med väggar
 	for (int i = 0; i < 120; i++)
 	{
@@ -161,6 +142,15 @@ void Game::checkCollision()
 		{
 			character.setMove(-128, -128);
 		}
-
 	}
+}
+
+string Game::getMap()
+{
+	return this->map;
+}
+
+void Game::setMap(string m)
+{
+	this->map = m;
 }
