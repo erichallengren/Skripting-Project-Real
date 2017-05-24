@@ -59,7 +59,7 @@ void Game::setupMap(sf::Texture * texture)
 			mapTile = map.substr((i * 15) + j, 1);
 
 			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
-			if (mapTile == "8")
+			if (mapTile == "6" && mapTile == "7" && mapTile == "8")
 			{
 				this->walls[(i * 15) + j] = list[(i * 15) + j];
 			}
@@ -97,6 +97,16 @@ void Game::draw(sf::RenderWindow& window)
 	window.draw(scoreDisplay);
 
 	window.display();
+}
+
+void Game::drawMap(sf::RenderWindow & window)
+{
+	window.clear(sf::Color::White);
+
+	for (int i = 0; i < 120; i++)
+	{
+		window.draw(*list[i]);
+	}
 }
 
 void Game::checkCollision()
@@ -153,4 +163,22 @@ string Game::getMap()
 void Game::setMap(string m)
 {
 	this->map = m;
+}
+
+void Game::setTile(int place, int tile, sf::Texture * texture)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 15; j++)
+		{
+			if (place == ((i * 15 )+ j))
+			{
+				this->list[place] = new Tile(texture, tile, j * 128, i * 128);
+				if (mapTile == "6" && mapTile == "7" && mapTile == "8")
+				{
+					this->walls[place] = list[place];
+				}
+			}
+		}
+	}
 }

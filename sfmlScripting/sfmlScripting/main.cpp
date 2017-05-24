@@ -27,6 +27,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
 
 	Menu menu(window.getSize().x, window.getSize().y);
+	int menuEditIndex = 0;
 
 	sf::Clock clock;
 
@@ -52,8 +53,9 @@ int main()
 						menu.MoveDown();
 						break;
 
-					case sf::Keyboard::W:
-						play = menu.Select(*game);
+					case sf::Keyboard::Right:
+						play = menu.Select(*game, window.getSize().x, window.getSize().y, play);
+
 						break;
 					}
 				}
@@ -62,6 +64,54 @@ int main()
 			}
 
 			window.clear();
+			menu.draw(window);
+			window.display();
+		}
+		else if (play == 3)
+		{
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+				case sf::Event::KeyReleased:
+					switch (event.key.code)
+					{
+					case sf::Keyboard::Left:
+						play = 1;
+						break;
+
+					case sf::Keyboard::Num1:
+						game->setTile(menuEditIndex++, 0, &texture);
+						break;
+					case sf::Keyboard::Num2:
+						game->setTile(menuEditIndex++, 1, &texture);
+						break;
+					case sf::Keyboard::Num3:
+						game->setTile(menuEditIndex++, 2, &texture);
+						break;
+					case sf::Keyboard::Num4:
+						game->setTile(menuEditIndex++, 3, &texture);
+						break;
+					case sf::Keyboard::Num5:
+						game->setTile(menuEditIndex++, 4, &texture);
+						break;
+					case sf::Keyboard::Num6:
+						game->setTile(menuEditIndex++, 5, &texture);
+						break;
+					case sf::Keyboard::Num7:
+						game->setTile(menuEditIndex++, 6, &texture);
+						break;
+					case sf::Keyboard::Num8:
+						game->setTile(menuEditIndex++, 7, &texture);
+						break;
+					}
+				}
+				if (event.type == sf::Event::Closed)
+					window.close();
+			}
+			game->setupMap(&texture);
+			game->drawMap(window);
 			menu.draw(window);
 			window.display();
 		}

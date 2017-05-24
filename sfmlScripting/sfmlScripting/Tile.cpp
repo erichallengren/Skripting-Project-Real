@@ -17,6 +17,15 @@ Tile::Tile(sf::Texture * texture, string tile, int x, int y)
 	this->tile.setTextureRect(sf::IntRect(getTilePoss(tile), 0, 32, 32));
 }
 
+Tile::Tile(sf::Texture * texture, int tile, int x, int y)
+{
+	this->tileSize = { 128, 128 };
+	this->tile = sf::RectangleShape(tileSize);
+	this->tile.setPosition(x, y);
+	this->tile.setTexture(texture);
+	this->tile.setTextureRect(sf::IntRect(tile, 0, 32, 32));
+}
+
 int Tile::getTilePoss(string tile)
 {
 	int tileNumber = 0;

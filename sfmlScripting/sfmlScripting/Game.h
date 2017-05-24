@@ -30,9 +30,11 @@ public:
 	void setupMap(sf::Texture * texture);
 	void update(float sec, lua_State * L);
 	void draw(sf::RenderWindow& window);
+	void drawMap(sf::RenderWindow& window);
 	void checkCollision();
 	string getMap();
 	void setMap(string m);
+	void setTile(int i, int tile, sf::Texture * texture);
 };
 
 #endif // !

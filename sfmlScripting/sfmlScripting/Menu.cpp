@@ -62,7 +62,7 @@ void Menu::MoveDown()
 	}
 }
 
-int Menu::Select(Game &g)
+int Menu::Select(Game &g, float width, float height, int state)
 {
 	int play = 1;
 	if (selectedItemIndex == 0)
@@ -71,16 +71,17 @@ int Menu::Select(Game &g)
 	}
 	else if(selectedItemIndex == 1)
 	{
-		string newMap;
-		newMap = g.getMap();
-		menu[1].setString("Eddit: " + newMap);
-		char line[120];
-		while (cin >> line)
+		if (state == 3)
 		{
-			cout << " " << line << " " << endl;
+			play = 1;
 		}
-		cin >> newMap;
-		g.setMap(newMap);
+		else
+		{
+			menu[1].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS + 1) * 2));
+			menu[1].setString("1 = grass 2 = Dgrass 3 = Ldirt 4 = dirt 5 = Ddirt 6 = Lwall 7 = wall 8 = Dwall ");
+			play = 3;
+		}
+
 	}
 	else if(selectedItemIndex == 2)
 	{

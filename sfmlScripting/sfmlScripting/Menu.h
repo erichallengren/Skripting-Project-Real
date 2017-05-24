@@ -14,7 +14,7 @@ public:
 	void draw(sf::RenderWindow &window);
 	void MoveUp();
 	void MoveDown();
-	int Select(Game &g);
+	int Select(Game &g, float width, float height, int state);
 private:
 	int selectedItemIndex;
 	sf::Font font;
