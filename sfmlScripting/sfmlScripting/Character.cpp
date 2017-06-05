@@ -108,10 +108,10 @@ void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, 
 	//de som ska ändras
 	lua_pushnumber(L, velocity.x);
 	lua_pushnumber(L, velocity.y);
-	lua_pushnumber(L, this->moveCD);
+	/*lua_pushnumber(L, this->moveCD);
 	lua_pushboolean(L, this->moved);
 	lua_pushstring(L, this->lastMove.c_str());
-	lua_pushboolean(L, this->hasAttacked);
+	lua_pushboolean(L, this->hasAttacked);*/
 
 	//det som ska ändras med
 	lua_pushnumber(L, velocityXChange);
@@ -122,7 +122,7 @@ void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, 
 	lua_pushboolean(L, hasAttackedChange);
 
 	//ta tillbaka svar
-	error = lua_pcall(L, 12, 6, NULL); //L, in, ut, NULL
+	error = lua_pcall(L, 8, 6, NULL); //L, in, ut, NULL
 
 	//sätt dem i c++
 	this->hasAttacked = lua_toboolean(L, -1); //får sista
