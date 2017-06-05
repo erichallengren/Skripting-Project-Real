@@ -1,10 +1,14 @@
 
-function move(velocityX, velocityY, velocityXChange, velocityYChange, moveCDChange, movedChange, lastMoveChange, hasAttackedChange)
+function move(velocityX, velocityY, moveCD, moved, lastMove, hasAttacked, velocityXChange, velocityYChange, moveCDChange, movedChange, lastMoveChange, hasAttackedChange)
 	
 	velocityX = velocityX + velocityXChange	
 	velocityY = velocityY + velocityYChange
+	moveCD = moveCDChange
+	moved = movedChange
+	lastMove = lastMoveChange
+	hasAttacked = hasAttackedChange
 	
-	return velocityX, velocityY, moveCDChange, movedChange, lastMoveChange, hasAttackedChange
+	return velocityX, velocityY, moveCD, moved, lastMove, hasAttacked
 end
 
 function attack(moveCD, moved, attacking, hasAttacked, moveCDChange, movedChange, attackingChange, hasAttackedChange)
