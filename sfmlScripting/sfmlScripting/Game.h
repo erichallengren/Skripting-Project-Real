@@ -12,6 +12,8 @@ private:
 	Character character;
 	Monster monster;
 	Tile * list[120];
+	Tile * smallList[120];
+	Tile * selectList[8];
 	int amountOfWalls;
 	Tile * walls[120];
 	int score;
@@ -28,9 +30,12 @@ public:
 	~Game();
 
 	void setupMap(sf::Texture * texture);
+	void setupSelectionList(sf::Texture * texture);
 	void update(float sec, lua_State * L);
 	void draw(sf::RenderWindow& window);
 	void drawMap(sf::RenderWindow& window);
+	void drawSmallMap(sf::RenderWindow& window);
+	void drawSelectList(sf::RenderWindow& window);
 	void checkCollision();
 	string getMap();
 	void setMap(string m);

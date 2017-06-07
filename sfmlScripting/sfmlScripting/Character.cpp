@@ -167,9 +167,12 @@ void Character::updateMiddlePoint()
 	this->middlePoint.y += this->characterSize;
 }
 
-void Character::setPosition(int x, int y)
+
+
+void Character::setPos(int x, int y)
 {
-	this->character.setPosition(x, y);
+	this->animatedCharacter.setPosition({ float(x) * 128, float(y) * 128 });
+	this->character.setPosition({ float(x) * 128, float(y) * 128 });
 }
 
 void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const

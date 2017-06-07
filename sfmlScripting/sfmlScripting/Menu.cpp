@@ -78,7 +78,7 @@ int Menu::Select(Game &g, float width, float height, int state)
 		else
 		{
 			menu[1].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS + 1) * 2));
-			menu[1].setString("1 = grass 2 = Dgrass 3 = Ldirt 4 = dirt 5 = Ddirt 6 = Lwall 7 = wall 8 = Dwall ");
+			menu[1].setString("    1              2             3              4             5              6              7              8 ");
 			play = 3;
 		}
 

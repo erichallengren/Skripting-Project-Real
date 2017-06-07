@@ -110,14 +110,16 @@ int main()
 				if (event.type == sf::Event::Closed)
 					window.close();
 			}
-			game->setupMap(&texture);
-			game->drawMap(window);
+			
+			//game->drawMap(window);
+			game->drawSmallMap(window);
+			game->drawSelectList(window);
 			menu.draw(window);
 			window.display();
 		}
 		else if (play == 2 && gameStarted == false)
 		{
-			game->setupMap(&texture);
+			//game->setupMap(&texture);
 			gameStarted = true;
 		}
 		else if (play == 2)

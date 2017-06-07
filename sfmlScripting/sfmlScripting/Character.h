@@ -36,6 +36,7 @@ public:
 	void move(float sec, lua_State * L);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
+	
 
 	sf::CircleShape getCharacter();
 	sf::FloatRect getBoundingBox();
@@ -45,7 +46,7 @@ public:
 	bool getHasAttacked();
 
 
-	void setPosition(int x, int y);
+	void setPos(int x, int y);
 	void setMoved(bool moved);
 	void setMove(float x, float y);
 	void setHasAttacked(bool state);

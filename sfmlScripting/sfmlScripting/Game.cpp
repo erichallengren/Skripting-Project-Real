@@ -37,6 +37,9 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 		myfile.close();
 	}
 	else cout << "Unable to open file";	
+
+	setupMap(texture);
+	setupSelectionList(texture);
 }
 
 Game::~Game()
@@ -59,11 +62,20 @@ void Game::setupMap(sf::Texture * texture)
 			mapTile = map.substr((i * 15) + j, 1);
 
 			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
-			if (mapTile == "6" && mapTile == "7" && mapTile == "8")
+			this->smallList[(i * 15) + j] = new Tile(texture, mapTile, j * 64, i * 64, true);
+			if (mapTile == "6" || mapTile == "7" || mapTile == "8")
 			{
 				this->walls[(i * 15) + j] = list[(i * 15) + j];
 			}
 		}
+	}
+}
+
+void Game::setupSelectionList(sf::Texture * texture)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		selectList[i] = new Tile(texture, i, i * 128, 600, false, true);
 	}
 }
 
@@ -106,6 +118,24 @@ void Game::drawMap(sf::RenderWindow & window)
 	for (int i = 0; i < 120; i++)
 	{
 		window.draw(*list[i]);
+	}
+}
+
+void Game::drawSmallMap(sf::RenderWindow & window)
+{
+	window.clear(sf::Color::Black);
+
+	for (int i = 0; i < 120; i++)
+	{
+		window.draw(*smallList[i]);
+	}
+}
+
+void Game::drawSelectList(sf::RenderWindow & window)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		window.draw(*selectList[i]);
 	}
 }
 
@@ -174,9 +204,14 @@ void Game::setTile(int place, int tile, sf::Texture * texture)
 			if (place == ((i * 15 )+ j))
 			{
 				this->list[place] = new Tile(texture, tile, j * 128, i * 128);
-				if (mapTile == "6" && mapTile == "7" && mapTile == "8")
+				this->smallList[place] = new Tile(texture, tile, j * 64, i * 64, true);
+				if (tile == 6 || tile == 7 || tile == 8)
 				{
 					this->walls[place] = list[place];
+				}
+				else
+				{
+					this->walls[place] = nullptr;
 				}
 			}
 		}

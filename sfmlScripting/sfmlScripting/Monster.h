@@ -29,6 +29,7 @@ public:
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
+	void newMonster(int score);
 
 	//sf::RectangleShape getMonster();
 	sf::RectangleShape getMonster();

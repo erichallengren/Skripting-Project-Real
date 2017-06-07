@@ -12,8 +12,8 @@ private:
 
 public:
 	Tile();
-	Tile(sf::Texture * texture, string tile, int x = 0, int y = 0);
-	Tile(sf::Texture * texture, int tile, int x = 0, int y = 0);
+	Tile(sf::Texture * texture, string tile, int x = 0, int y = 0, bool small = false);
+	Tile(sf::Texture * texture, int tile, int x = 0, int y = 0, bool small = false, bool select = false);
 	~Tile();
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;

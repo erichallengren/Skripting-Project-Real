@@ -272,12 +272,33 @@ void Monster::checkSides(Character & character, int & score)
 		if (character.getHasAttacked() == true)
 		{
 			score++;
+			newMonster(score);
 		}
 	}
 
 	if (this->inside == true)
 	{
 		score--;
+		if (score % 2 == 0)
+		{
+			character.setPos(1, 4);
+		}
+		else
+		{
+			character.setPos(13, 4);
+		}
+	}
+}
+
+void Monster::newMonster(int score)
+{
+	if (score % 2 == 0)
+	{
+		this->monster.setPosition(1664, 512);
+	}
+	else
+	{
+		this->monster.setPosition(128, 512);
 	}
 }
 
