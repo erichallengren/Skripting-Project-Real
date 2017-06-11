@@ -26,6 +26,7 @@ Monster::Monster(sf::Texture * texture)
 	//attaking variables
 	this->nextTo = false;
 	this->inside = false;
+
 }
 
 Monster::~Monster()
@@ -292,13 +293,17 @@ void Monster::checkSides(Character & character, int & score)
 
 void Monster::newMonster(int score)
 {
+	int randEnemySprite = rand() % 19 + 8;
 	if (score % 2 == 0)
 	{
 		this->monster.setPosition(1664, 512);
+		this->monster.setTextureRect(sf::IntRect(randEnemySprite * 32, 0, 32, 32));
 	}
 	else
 	{
 		this->monster.setPosition(128, 512);
+		this->monster.setTextureRect(sf::IntRect(randEnemySprite * 32, 0, 32, 32));
 	}
+	//8-27 = 19
 }
 
