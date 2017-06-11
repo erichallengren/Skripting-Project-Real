@@ -40,6 +40,7 @@ public:
 	string getMap();
 	void setMap(string m);
 	void setTile(int i, int tile, sf::Texture * texture);
+	int getScore();
 };
 
 #endif // !

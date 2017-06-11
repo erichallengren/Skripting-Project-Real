@@ -135,6 +135,38 @@ int main()
 			float sec = elapsed.asSeconds();
 			game->update(sec, L);
 			game->draw(window);
+			if (game->getScore() > 9 || game->getScore() < -9)
+			{
+				game->getScore();
+				play = 4;
+			}
+		}
+		else if (play == 4)
+		{
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+				case sf::Event::KeyReleased:
+
+					break;
+				}
+				if (event.type == sf::Event::Closed)
+					window.close();
+			}
+
+			window.clear();
+			int score = game->getScore();
+			if (score >= 10 )
+			{
+				menu.drawEnd(window, true);
+			}
+			else if (score < 10)
+			{
+				menu.drawEnd(window, false);
+			}
+			window.display();
 		}
 		else if(play == 0)
 		{

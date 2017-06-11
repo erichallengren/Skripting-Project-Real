@@ -217,3 +217,8 @@ void Game::setTile(int place, int tile, sf::Texture * texture)
 		}
 	}
 }
+
+int Game::getScore()
+{
+	return this->score;
+}

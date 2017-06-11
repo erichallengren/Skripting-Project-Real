@@ -28,6 +28,11 @@ Menu::Menu(float width, float height)
 	menu[2].setPosition(sf::Vector2f(width / 2, height / (MAX_NUMBER_OF_ITEMS + 1) * 3));
 
 	selectedItemIndex = 0;
+
+	end.setFont(font);
+	end.setFillColor(sf::Color::White);
+
+	end.setPosition(sf::Vector2f(width / 2, height / 2));
 }
 
 Menu::~Menu()
@@ -40,6 +45,16 @@ void Menu::draw(sf::RenderWindow & window)
 	{
 		window.draw(menu[i]);
 	}
+}
+
+void Menu::drawEnd(sf::RenderWindow & window, bool win)
+{
+	end.setString("You Win");
+	if (win == false)
+	{
+		end.setString("You Lose");
+	}
+	window.draw(end);
 }
 
 void Menu::MoveUp()
