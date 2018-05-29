@@ -8,13 +8,54 @@ Tile::Tile()
 	this->tile.setFillColor(sf::Color::Green);
 }
 
-Tile::Tile(sf::Texture * texture, string tile, int x, int y)
+Tile::Tile(sf::Texture * texture, string tile, int x, int y, bool small)
 {
-	this->tileSize = { 128, 128 };
-	this->tile = sf::RectangleShape(tileSize);
-	this->tile.setPosition(x, y);
-	this->tile.setTexture(texture);
-	this->tile.setTextureRect(sf::IntRect(getTilePoss(tile), 0, 32, 32));
+	if (!small)
+	{
+		this->tileSize = { 128, 128 };
+		this->tile = sf::RectangleShape(tileSize);
+		this->tile.setPosition(x, y);
+		this->tile.setTexture(texture);
+		this->tile.setTextureRect(sf::IntRect(getTilePoss(tile), 0, 32, 32));
+	}
+	else
+	{
+		this->tileSize = { 64, 64 };
+		this->tile = sf::RectangleShape(tileSize);
+		this->tile.setPosition(480 + x, y);
+		this->tile.setTexture(texture);
+		this->tile.setTextureRect(sf::IntRect(getTilePoss(tile), 0, 32, 32));
+	}
+
+}
+
+Tile::Tile(sf::Texture * texture, int tile, int x, int y, bool small, bool select)
+{
+	if (!small && !select)
+	{
+		this->tileSize = { 128, 128 };
+		this->tile = sf::RectangleShape(tileSize);
+		this->tile.setPosition(x, y);
+		this->tile.setTexture(texture);
+		this->tile.setTextureRect(sf::IntRect(tile * 32, 0, 32, 32));
+	}
+	else if (!select)
+	{
+		this->tileSize = { 64, 64 };
+		this->tile = sf::RectangleShape(tileSize);
+		this->tile.setPosition(480 + x, y);
+		this->tile.setTexture(texture);
+		this->tile.setTextureRect(sf::IntRect(tile * 32, 0, 32, 32));
+	}
+	else
+	{
+		this->tileSize = { 128, 128 };
+		this->tile = sf::RectangleShape(tileSize);
+		this->tile.setPosition(450 + x, y);
+		this->tile.setTexture(texture);
+		this->tile.setTextureRect(sf::IntRect(tile * 32, 0, 32, 32));
+	}
+
 }
 
 int Tile::getTilePoss(string tile)

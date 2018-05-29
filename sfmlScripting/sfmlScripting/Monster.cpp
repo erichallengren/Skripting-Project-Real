@@ -2,38 +2,10 @@
 
 Monster::Monster()
 {
-	this->monsterSize = { 128, 128 };
-	this->monster = sf::RectangleShape(monsterSize);
-	this->monster.setPosition(1024, 512);
-	this->monster.setFillColor(sf::Color::Black);
-	this->hasAttacked = false;
-	
-	//middlepoint
-	this->middlePoint = this->monster.getPosition();
-	this->middlePoint.x += this->monsterSize.x * 0.5;
-	this->middlePoint.y += this->monsterSize.y * 0.5;
-
-	//hitboxs
-	//Samma som monstret
-	this->hitbox.setPosition(this->monster.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->monster.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
-
-	//venne
-	this->nextTo = false;
-	this->inside = false;
 }
 
-Monster::Monster(sf::Texture * texture, int x, int y)
-	//: monster()
+Monster::Monster(sf::Texture * texture)
+//: monster()
 {
 	this->monsterSize = { 128, 128 };
 	this->monster = sf::RectangleShape(monsterSize);
@@ -46,27 +18,15 @@ Monster::Monster(sf::Texture * texture, int x, int y)
 	this->middlePoint.x += this->monsterSize.x * 0.5;
 	this->middlePoint.y += this->monsterSize.y * 0.5;
 
-	//hitboxs
-	//Samma som monstret
-	this->hitbox.setPosition(this->monster.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->monster.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
 	//new shit
 	//this->monster.setPosition(x, y);
 	this->monster.setTexture(texture);
-	this->monster.setTextureRect(sf::IntRect(22*32, 0, 32, 32));
+	this->monster.setTextureRect(sf::IntRect(22 * 32, 0, 32, 32));
 
-	//venne
+	//attaking variables
 	this->nextTo = false;
 	this->inside = false;
+
 }
 
 Monster::~Monster()
@@ -96,28 +56,6 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 
 	int error = luaL_dofile(L, "character.lua");
 
-	//lua_getglobal(L, "moveOld");
-
-	//lua_pushnumber(L, velocity.x);
-	//lua_pushnumber(L, velocity.y);
-	//lua_pushnumber(L, rayToCharacter.x);
-	//lua_pushnumber(L, rayToCharacter.y);
-	//lua_pushnumber(L, moveNumber);
-
-	//error = lua_pcall(L, 5, 5, NULL);
-
-	//moveNumber = lua_tonumber(L, -1); //får sista
-	//rayx = lua_tonumber(L, -2);
-	//rayy = lua_tonumber(L, -3);
-	//rayToCharacter.y = rayx;
-	//rayToCharacter.x = rayy;
-	//velocity.y = lua_tonumber(L, -4);
-	//velocity.x = lua_tonumber(L, -5);
-
-	//lua_pop(L, 5);
-
-
-	
 	if (rayToCharacter.x == 0 && rayToCharacter.y != 0)
 	{
 		if (rayToCharacter.y >= 0)
@@ -126,9 +64,9 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 
 			lua_pushnumber(L, velocity.y);
 			lua_pushnumber(L, 128);
-			
+
 			error = lua_pcall(L, 2, 1, NULL);
-			
+
 			velocity.y = lua_tonumber(L, -1);
 
 			lua_pop(L, 1);
@@ -147,8 +85,8 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 			lua_pop(L, 1);
 		}
 	}
-	
-	if (rayToCharacter.y == 0 && rayToCharacter.x != 0)
+
+	if (rayToCharacter.x != 0 && rayToCharacter.y == 0)
 	{
 		if (rayToCharacter.x >= 0)
 		{
@@ -241,56 +179,27 @@ void Monster::move(Character& character, bool nextTo, lua_State * L)
 			}
 		}
 	}
+
 	if (nextTo == false)
 	{
 		//Sätter monstrets nya position
 		this->monster.move(velocity);
 		this->hasAttacked = false;
 
-		//hitbox
-		this->hitbox.move(velocity);
-		this->hitbox.setPosition(hitbox.getPosition());
-		this->hitbox.updateHitboxDrawable();
-
-		this->hurtbox.setPosition(hitbox.getPosition());
-		this->hurtbox.updateHitboxDrawable();
-
 		this->updateMiddlePoint();
 	}
 	else
 	{
-		//hitboxs
-		//Samma som monstret
-		this->hitbox.setPosition(this->monster.getPosition());
-		this->hitbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-		this->hitbox.setSize(sf::Vector2f(128, 128));
 		this->hasAttacked = true;
-
-		//Samma som monstret
-		this->hurtbox.setPosition(this->monster.getPosition());
-		this->hurtbox.setOrigin(sf::Vector2f(this->monster.getPosition()));
-		this->hurtbox.setSize(sf::Vector2f(128, 128));
-		//hurtbox move
-		this->hurtbox.move(velocity);
-		this->hurtbox.setPosition(hurtbox.getPosition());
-		this->hurtbox.updateHitboxDrawable();
 	}
 
 
 
 }
 
-void checkIfCanAttack()
-{
-	//position - charactär position vector kolla dens längd
-}
-
 void Monster::draw(sf::RenderTarget &target, sf::RenderStates states)const
 {
-	//target.draw(this->hurtbox);
-	//target.draw(this->hitbox);
 	target.draw(this->monster);
-	//target.draw(this->debugMidPoint);
 }
 
 void Monster::updateMiddlePoint()
@@ -298,34 +207,12 @@ void Monster::updateMiddlePoint()
 	this->middlePoint = this->monster.getPosition();
 	this->middlePoint.x += this->monsterSize.x * 0.5;
 	this->middlePoint.y += this->monsterSize.y * 0.5;
-
-	this->debugMidPoint.setPosition(this->middlePoint - sf::Vector2f(this->debugMidPoint.getRadius(), this->debugMidPoint.getRadius()));
 }
 
 
 sf::RectangleShape Monster::getMonster()
 {
 	return this->monster;
-}
-
-Hitbox Monster::getHitbox()
-{
-	return this->hitbox;
-}
-
-Hitbox Monster::getHurtbox()
-{
-	return this->hurtbox;
-}
-
-sf::FloatRect Monster::getBoundingBox()
-{
-	return this->hitbox.getBoundingBox();
-}
-
-sf::FloatRect Monster::getHurtboxBoundingBox()
-{
-	return this->hurtbox.getBoundingBox();
 }
 
 sf::Vector2f Monster::getMiddlePoint()
@@ -340,21 +227,10 @@ bool Monster::getHasAttacked()
 
 void Monster::setMove(float x, float y)
 {
-		velocity = { x, y };
-		this->monster.move(velocity);
-		//this->animatedMonster.move(velocity);
+	velocity = { x, y };
+	this->monster.move(velocity);
 
-		//hitbox
-
-		this->hitbox.move(velocity);
-		this->hitbox.setPosition(hitbox.getPosition());
-		this->hitbox.updateHitboxDrawable();
-
-		this->hurtbox.move(velocity);
-		this->hurtbox.setPosition(hurtbox.getPosition());
-		this->hurtbox.updateHitboxDrawable();
-
-		this->updateMiddlePoint();
+	this->updateMiddlePoint();
 }
 
 void Monster::setHasAttacked(bool state)
@@ -391,12 +267,37 @@ void Monster::checkSides(Character & character, int & score)
 		if (character.getHasAttacked() == true)
 		{
 			score++;
+			newMonster(score);
 		}
 	}
 
 	if (this->inside == true)
 	{
 		score--;
+		if (score % 2 == 0)
+		{
+			character.setPos(1, 4);
+		}
+		else
+		{
+			character.setPos(13, 4);
+		}
 	}
+}
+
+void Monster::newMonster(int score)
+{
+	int randEnemySprite = rand() % 19 + 8;
+	if (score % 2 == 0)
+	{
+		this->monster.setPosition(1664, 512);
+		this->monster.setTextureRect(sf::IntRect(randEnemySprite * 32, 0, 32, 32));
+	}
+	else
+	{
+		this->monster.setPosition(128, 512);
+		this->monster.setTextureRect(sf::IntRect(randEnemySprite * 32, 0, 32, 32));
+	}
+	//8-27 = 19
 }
 

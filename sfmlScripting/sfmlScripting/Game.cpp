@@ -2,18 +2,15 @@
 
 Game::Game()
 {
-	amountOfWalls = 0;
-	this->character = Character();
-	this->monster = Monster();
-	this->nextTo = false;
 }
 
 Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 {
 	score = 0;
+
 	//120 lång, en för varje tile på banan	
-	string map = "";
-	string mapTile = "";
+	map = "";
+	mapTile = "";
 	ifstream myfile("../Maps/map1.txt");
 
 	if (!font.loadFromFile("arial.ttf"))
@@ -22,14 +19,14 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 	}
 	scoreDisplay.setFont(font);
 	scoreDisplay.setString("Score: " + std::to_string(score));
-	scoreDisplay.setCharacterSize(24);
-	scoreDisplay.setFillColor(sf::Color::Red);
+	scoreDisplay.setCharacterSize(36);
+	scoreDisplay.setFillColor(sf::Color::White);
 
 
 	amountOfWalls = 0;
-	this->character = Character(playerTexture, 2, 2);
-	this->monster = Monster(texture, 6, 6);
-	
+	this->character = Character(playerTexture);
+	this->monster = Monster(texture);
+
 
 	if (myfile.is_open())
 	{
@@ -41,8 +38,17 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 	}
 	else cout << "Unable to open file";
 
+	setupMap(texture);
+	setupSelectionList(texture);
+}
 
+Game::~Game()
+{
 
+}
+
+void Game::setupMap(sf::Texture * texture)
+{
 	for (int i = 0; i < 120; i++)
 	{
 		this->walls[i] = nullptr;
@@ -54,26 +60,27 @@ Game::Game(sf::Texture * texture, sf::Texture * playerTexture)
 		for (int j = 0; j < 15; j++)
 		{
 			mapTile = map.substr((i * 15) + j, 1);
-			
+
 			this->list[(i * 15) + j] = new Tile(texture, mapTile, j * 128, i * 128);
-			if (mapTile == "8")
+			this->smallList[(i * 15) + j] = new Tile(texture, mapTile, j * 64, i * 64, true);
+			if (mapTile == "6" || mapTile == "7" || mapTile == "8")
 			{
 				this->walls[(i * 15) + j] = list[(i * 15) + j];
 			}
 		}
 	}
-	
 }
 
-Game::~Game()
+void Game::setupSelectionList(sf::Texture * texture)
 {
-
+	for (int i = 0; i < 8; i++)
+	{
+		selectList[i] = new Tile(texture, i, i * 128, 600, false, true);
+	}
 }
 
-void Game::update(float sec, lua_State * L)
+void Game::update(float sec, lua_State * L, lua_State * LU)
 {
-
-
 	scoreDisplay.setString("Score: " + std::to_string(score));
 
 	this->character.update(sec, L);
@@ -85,11 +92,11 @@ void Game::draw(sf::RenderWindow& window)
 {
 	window.clear(sf::Color::White);
 
-	for (int i = 0; i < 8; i++) 
+	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 15; j++)
 		{
-			window.draw( * list[(i * 15) + j]);
+			window.draw(*list[(i * 15) + j]);
 		}
 	}
 
@@ -102,28 +109,40 @@ void Game::draw(sf::RenderWindow& window)
 	window.display();
 }
 
+void Game::drawMap(sf::RenderWindow & window)
+{
+	window.clear(sf::Color::White);
+
+	for (int i = 0; i < 120; i++)
+	{
+		window.draw(*list[i]);
+	}
+}
+
+void Game::drawSmallMap(sf::RenderWindow & window)
+{
+	window.clear(sf::Color::Black);
+
+	for (int i = 0; i < 120; i++)
+	{
+		window.draw(*smallList[i]);
+	}
+}
+
+void Game::drawSelectList(sf::RenderWindow & window)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		window.draw(*selectList[i]);
+	}
+}
+
 void Game::checkCollision()
 {
-	/*this->nextTo = false;
-
-	sf::Vector2f distance = (this->character.getMiddlePoint() - this->monster.getMiddlePoint());
-
-	if (distance.x == 128 && distance.y == 0 || distance.x == 0 && distance.y == 128)
-	{
-		nextTo = true;
-		score++;
-	}
-
-	if (distance.x == -128 && distance.y == 0 || distance.x == 0 && distance.y == -128)
-	{
-		nextTo = true;
-		score++;
-	}*/
-
 	//Collosion med väggar
 	for (int i = 0; i < 120; i++)
 	{
-		if (this->walls[i] != nullptr && i != 0 && i != 14 && i != 105 && i != 119 )
+		if (this->walls[i] != nullptr && i != 0 && i != 14 && i != 105 && i != 119)
 		{
 			if (this->character.getBoundingBox().intersects(this->walls[i]->getBoundingBox()))
 			{
@@ -131,7 +150,7 @@ void Game::checkCollision()
 				{
 					character.setMove(0, 128);
 				}
-				else if(character.getLastMoved() == "S")
+				else if (character.getLastMoved() == "S")
 				{
 					character.setMove(0, -128);
 				}
@@ -161,6 +180,43 @@ void Game::checkCollision()
 		{
 			character.setMove(-128, -128);
 		}
-
 	}
+}
+
+string Game::getMap()
+{
+	return this->map;
+}
+
+void Game::setMap(string m)
+{
+	this->map = m;
+}
+
+void Game::setTile(int place, int tile, sf::Texture * texture)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 15; j++)
+		{
+			if (place == ((i * 15) + j))
+			{
+				this->list[place] = new Tile(texture, tile, j * 128, i * 128);
+				this->smallList[place] = new Tile(texture, tile, j * 64, i * 64, true);
+				if (tile == 6 || tile == 7 || tile == 8)
+				{
+					this->walls[place] = list[place];
+				}
+				else
+				{
+					this->walls[place] = nullptr;
+				}
+			}
+		}
+	}
+}
+
+int Game::getScore()
+{
+	return this->score;
 }

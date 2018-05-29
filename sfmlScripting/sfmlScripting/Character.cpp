@@ -2,53 +2,22 @@
 
 Character::Character()
 {
-	this->characterSize = 64.f;
-	this->character = sf::CircleShape(this->characterSize);
-	this->character.setPosition(128, 512);
-	this->character.setFillColor(sf::Color::Green);
-
-	//middlepoint
-	this->middlePoint = this->character.getPosition();
-	this->middlePoint.x += this->characterSize;
-	this->middlePoint.y += this->characterSize;
-
-	this->tileSize = 128; //4 ggr 32
-	this->moveCD = 1;
-	this->moved = false;
-	this->lastMove = "W";
-	this->attacking = false;
-	this->hasAttacked = false;
-
-	//hitbox
-	// character
-	this->hitbox.setPosition(this->character.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->character.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
 }
 
-Character::Character(sf::Texture * texture, int x, int y) 
-	//:character()
+Character::Character(sf::Texture * texture)
+//:character()
 {
 	this->animatedCharacter = AnimatedSprite(*texture, sf::Vector2i(32.f, 32.f), 0.15f);
 	this->animatedCharacter.setPosition({ 128, 512 });
 
 	this->animatedCharacter.addAnimation("Idle", { 0, 8 });
-	this->animatedCharacter.addAnimation("Attack", {9, 21});
+	this->animatedCharacter.addAnimation("Attack", { 9, 21 });
 
 	this->animatedCharacter.setAnimation("Idle");
 
 	this->characterSize = 64.f;
 	this->character = sf::CircleShape(this->characterSize);
 	this->character.setPosition(128, 512);
-	//this->character.setFillColor(sf::Color::Green);
 
 	//middlepoint
 	this->middlePoint = this->character.getPosition();
@@ -61,26 +30,6 @@ Character::Character(sf::Texture * texture, int x, int y)
 	this->lastMove = "W";
 	this->attacking = false;
 	this->hasAttacked = false;
-
-	//hitbox
-	// character
-	this->hitbox.setPosition(this->character.getPosition());
-	this->hitbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hitbox.setSize(sf::Vector2f(128, 128));
-
-	this->hurtbox.setPosition(this->character.getPosition());
-	this->hurtbox.setOrigin(sf::Vector2f(this->character.getPosition()));
-	this->hurtbox.setSize(sf::Vector2f(128, 128));
-
-	//debug
-	this->debugMidPoint.setRadius(10);
-	this->debugMidPoint.setFillColor(sf::Color::Red);
-
-	//new shit
-	//this->character.setPosition(x, y);
-	this->character.setTexture(texture);
-	this->character.setTextureRect(sf::IntRect(32*5, 0, 32, 32));
-
 }
 
 Character::~Character()
@@ -91,15 +40,41 @@ Character::~Character()
 void Character::update(float sec, lua_State * L)
 {
 	this->animatedCharacter.update(sec);
-	this->moveCD += sec;
-	if (this->moveCD >= 0.5)
+
+	int error = luaL_dofile(L, "update.lua");
+
+	if (error)
 	{
-		this->move(sec, L);
+		std::cout << "Errormsg: " << lua_tostring(L, -1);
+		lua_pop(L, 1);
+	}
+
+	lua_getglobal(L, "update");
+
+	lua_pushnumber(L, moveCD);
+	lua_pushnumber(L, sec);
+
+	error = lua_pcall(L, 2, 2, NULL); //L, in, ut, NULL
+
+	if (error)
+	{
+		std::cout << "Errormsg: " << lua_tostring(L, -1);
+		lua_pop(L, 1);
+	}
+
+	bool runMove = lua_toboolean(L, -1);
+	this->moveCD = lua_tonumber(L, -2);
+
+	lua_pop(L, 2);
+
+	if (runMove)
+	{
+		this->move(L, sec);
 	}
 }
 
-void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, float moveCDChange, 
-						bool movedChange, string lastMoveChange, bool hasAttackedChange)
+void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, float moveCDChange,
+	bool movedChange, string lastMoveChange, bool hasAttackedChange)
 {
 	int error = luaL_dofile(L, "character.lua");
 
@@ -108,67 +83,37 @@ void Character::luaMove(lua_State* L, int velocityXChange, int velocityYChange, 
 	//de som ska ändras
 	lua_pushnumber(L, velocity.x);
 	lua_pushnumber(L, velocity.y);
-	//lua_pushnumber(L, this->moveCD);
-	//lua_pushboolean(L, this->moved);
-	//lua_pushstring(L, this->lastMove.c_str());
-	//lua_pushboolean(L, this->hasAttacked);
 
 	//det som ska ändras med
 	lua_pushnumber(L, velocityXChange);
 	lua_pushnumber(L, velocityYChange);
-	lua_pushnumber(L, moveCDChange);
-	lua_pushboolean(L, movedChange);
-	lua_pushstring(L, lastMoveChange.c_str());
-	lua_pushboolean(L, hasAttackedChange);
 
 	//ta tillbaka svar
-	error = lua_pcall(L, 8, 6, NULL); //L, in, ut, NULL
+	error = lua_pcall(L, 4, 2, NULL); //L, in, ut, NULL
+
+	velocity.y = lua_tonumber(L, -1);
+	velocity.x = lua_tonumber(L, -2);
+
+	lua_pop(L, 2);
 
 	//sätt dem i c++
-	this->hasAttacked = lua_toboolean(L, -1); //får sista
-	this->lastMove = lua_tostring(L, -2);
-	this->moved = lua_toboolean(L, -3);
-	this->moveCD = lua_tonumber(L, -4);
-	velocity.y = lua_tonumber(L, -5);
-	velocity.x = lua_tonumber(L, -6);
-
-	//ta bort alla
-	lua_pop(L, 6);
+	this->hasAttacked = hasAttackedChange; //får sista
+	this->lastMove = lastMoveChange;
+	this->moved = movedChange;
+	this->moveCD = moveCDChange;
 }
 
 void Character::luaAttack(lua_State* L, int moveCDChange, bool movedChange, bool attackingChange,
-						  bool hasAttackedChange)
+	bool hasAttackedChange)
 {
-	int error = luaL_dofile(L, "character.lua");
-
-	lua_getglobal(L, "attack");
-
-	//de som ska ändras
-	lua_pushnumber(L, this->moveCD);
-	lua_pushboolean(L, this->moved);
-	lua_pushboolean(L, this->attacking);
-	lua_pushboolean(L, this->hasAttacked);
-
-	//det som ska ändras med
-	lua_pushnumber(L, moveCDChange);
-	lua_pushboolean(L, movedChange);
-	lua_pushboolean(L, attackingChange);
-	lua_pushboolean(L, hasAttackedChange);
-
-	//ta tillbaka svar
-	error = lua_pcall(L, 8, 4, NULL);
-
-	//sätt dem i c++
-	this->hasAttacked = lua_toboolean(L, -1);
-	this->attacking = lua_toboolean(L, -2);
-	this->moved = lua_toboolean(L, -3);
-	this->moveCD = lua_tonumber(L, -4);
-
-	//ta bort alla
-	lua_pop(L, 4);
+	//fixad föreddeta lua function
+	this->moveCD = moveCDChange;
+	this->moved = movedChange;
+	this->attacking = attackingChange;
+	this->hasAttacked = hasAttackedChange;
 }
 
-void Character::move(float sec, lua_State * L)
+void Character::move(lua_State * L, float sec)
 {
 	velocity = { 0, 0 };
 
@@ -201,22 +146,12 @@ void Character::move(float sec, lua_State * L)
 	}
 
 
-	
+
 
 
 	//Sätter karaktärens nya position
 	this->character.move(velocity);
 	this->animatedCharacter.move(velocity);
-
-	//hitbox
-	this->hitbox.move(velocity);
-	this->hitbox.setPosition(hitbox.getPosition());
-	this->hitbox.updateHitboxDrawable();
-
-	//hitbox
-	this->hurtbox.move(velocity);
-	this->hurtbox.setPosition(hurtbox.getPosition());
-	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }
@@ -226,13 +161,14 @@ void Character::updateMiddlePoint()
 	this->middlePoint = this->character.getPosition();
 	this->middlePoint.x += this->characterSize;
 	this->middlePoint.y += this->characterSize;
-
-	this->debugMidPoint.setPosition(this->middlePoint - sf::Vector2f(this->debugMidPoint.getRadius(), this->debugMidPoint.getRadius()));
 }
 
-void Character::setPosition(int x, int y)
+
+
+void Character::setPos(int x, int y)
 {
-	this->character.setPosition(x, y);
+	this->animatedCharacter.setPosition({ float(x) * 128, float(y) * 128 });
+	this->character.setPosition({ float(x) * 128, float(y) * 128 });
 }
 
 void Character::draw(sf::RenderTarget &target, sf::RenderStates states)const
@@ -253,21 +189,6 @@ sf::CircleShape Character::getCharacter()
 sf::FloatRect Character::getBoundingBox()
 {
 	return character.getGlobalBounds();
-}
-
-sf::FloatRect Character::getHitboxBoundingBox()
-{
-	return this->hurtbox.getBoundingBox();
-}
-
-Hitbox Character::getHitbox()
-{
-	return this->hitbox;
-}
-
-Hitbox Character::getHurtbox()
-{
-	return this->hurtbox;
 }
 
 bool Character::getMoved()
@@ -300,16 +221,6 @@ void Character::setMove(float x, float y)
 	velocity = { x, y };
 	this->character.move(velocity);
 	this->animatedCharacter.move(velocity);
-
-	//hitbox
-
-	this->hitbox.move(velocity);
-	this->hitbox.setPosition(hitbox.getPosition());
-	this->hitbox.updateHitboxDrawable();
-
-	this->hurtbox.move(velocity);
-	this->hurtbox.setPosition(hurtbox.getPosition());
-	this->hurtbox.updateHitboxDrawable();
 
 	this->updateMiddlePoint();
 }

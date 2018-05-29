@@ -13,7 +13,6 @@ private:
 	sf::Vector2f middlePoint;
 	sf::Vector2f velocity;
 	sf::Vector2f velocityh;
-	sf::CircleShape debugMidPoint;
 
 	int tileSize;
 	float moveCD;
@@ -22,36 +21,36 @@ private:
 	bool attacking;
 	bool hasAttacked;
 
-	Hitbox hitbox;
-	Hitbox hurtbox;
 public:
 	Character();
-	Character(sf::Texture * texture, int x = 0, int y = 0);
+	Character(sf::Texture * texture);
 	~Character();
 
 	void update(float sec, lua_State * L);
+
+	void setLua(lua_State * L);
+	static int LuaRunner(lua_State * L);
+
 	void luaMove(lua_State* L, int velocityXChange, int velocityYChange, float moveCDChange,
-				 bool movedChange, string lastMoveChange, bool hasAttackedChange);
+		bool movedChange, string lastMoveChange, bool hasAttackedChange);
 
-	void luaAttack(lua_State* L, int moveCDChange, bool movedChange, 
-				   bool attackingChange, bool hasAttackedChange);
+	void luaAttack(lua_State* L, int moveCDChange, bool movedChange,
+		bool attackingChange, bool hasAttackedChange);
 
-	void move(float sec, lua_State * L);
+	void move(lua_State * L, float sec);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states)const;
 	void updateMiddlePoint();
 
+
 	sf::CircleShape getCharacter();
 	sf::FloatRect getBoundingBox();
-	sf::FloatRect getHitboxBoundingBox();
-	Hitbox getHitbox();
-	Hitbox getHurtbox();
 	bool getMoved();
 	sf::Vector2f getMiddlePoint();
 	string getLastMoved();
 	bool getHasAttacked();
 
 
-	void setPosition(int x, int y);
+	void setPos(int x, int y);
 	void setMoved(bool moved);
 	void setMove(float x, float y);
 	void setHasAttacked(bool state);
